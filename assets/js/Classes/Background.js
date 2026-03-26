@@ -1,13 +1,12 @@
 class Background {
-    constructor(grid, tileSize, width, height, sprite) {
+    constructor(grid, tileSize, width, height) {
         this.grid = grid;
         this.tileSize = tileSize;
         this.width = width;
         this.height = height;
-        this.sprite = sprite;
     }
 
-    draw() {
+    draw(ctx, spriteSheet) {
         this.grid.forEach((row, rowIndex) => {
             row.forEach((tileData, colIndex) => {
                 const asset = ASSETS_MAP[tileData.name];
@@ -17,13 +16,13 @@ class Background {
                 const dy = rowIndex * TILE_SIZE;
 
                 if (!tileData.background) {
-                    this.drawDirt(dx, dy);
+                    this.drawDirt(ctx, spriteSheet, dx, dy);
                 }
                 if (tileData.rotate !== 0) {
-                    this.drawRotated(asset, dx, dy, tileData.rotate);
+                    this.drawRotated(ctx, spriteSheet, asset, dx, dy, tileData.rotate);
                 } else {
                     ctx.drawImage(
-                        this.sprite,
+                        spriteSheet,
                         asset.x, asset.y, asset.w, asset.h,
                         dx, dy, TILE_SIZE, TILE_SIZE
                     );
@@ -32,20 +31,20 @@ class Background {
         });
     }
 
-    drawDirt(dx, dy) {
+    drawDirt(ctx, spriteSheet, dx, dy) {
         ctx.drawImage(
-            this.sprite,
+            spriteSheet,
             ASSETS_MAP.DIRT.x, ASSETS_MAP.DIRT.y, ASSETS_MAP.DIRT.w, ASSETS_MAP.DIRT.h,
             dx, dy, TILE_SIZE, TILE_SIZE
         );
     }
 
-    drawRotated(asset, dx, dy, rotateAngle) {
+    drawRotated(ctx, spriteSheet, asset, dx, dy, rotateAngle) {
         ctx.save();
         ctx.translate(dx + TILE_SIZE / 2, dy + TILE_SIZE / 2);
         ctx.rotate(rotateAngle);
         ctx.drawImage(
-            this.sprite,
+            spriteSheet,
             asset.x, asset.y, asset.w, asset.h,
             -TILE_SIZE / 2, -TILE_SIZE / 2, TILE_SIZE, TILE_SIZE
         );

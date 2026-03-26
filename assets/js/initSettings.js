@@ -1,10 +1,16 @@
 "use strict";
 
+const RES_W = 1280;
+const RES_H = 1080;
+
 const BASE_HP = 100;
 
 const WORKER_SPEED = 2;
-const MINING_SPEED = 10;
 const WORKER_HP = 30;
+
+const ROCK_MINING_AMOUNT = 10;
+const IRON_MINING_AMOUNT = 5;
+const URANIUM_MINING_AMOUNT = 1;
 
 const TANK_SPEED = 5;
 const TANK_HP = 45;
@@ -28,15 +34,6 @@ const RESOURCES = [
     { id: "ri3", x: 15, y: 9, type: "iron" },
     { id: "ri4", x: 20, y: 10, type: "iron" },
 ];
-
-const spriteSheet = new Image();
-spriteSheet.src = "assets/imgs/scifi_tilesheet.png";
-
-/** @type {HTMLCanvasElement} */
-var canvas = document.getElementById("canvas");
-
-/** @type {CanvasRenderingContext2D} */
-var ctx = canvas.getContext("2d");
 
 const TILE_SIZE = 64;
 
