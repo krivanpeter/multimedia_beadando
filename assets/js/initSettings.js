@@ -1,27 +1,27 @@
 "use strict";
 
-const RES_W = 1280;
-const RES_H = 1080;
+export const RES_W = 1280;
+export const RES_H = 1080;
 
-const BASE_HP = 100;
+export const BASE_HP = 100;
 
-const WORKER_SPEED = 2;
-const WORKER_HP = 30;
+export const WORKER_SPEED = 2;
+export const WORKER_HP = 30;
 
-const ROCK_MINING_AMOUNT = 10;
-const IRON_MINING_AMOUNT = 5;
-const URANIUM_MINING_AMOUNT = 1;
+export const ROCK_MINING_AMOUNT = 10;
+export const IRON_MINING_AMOUNT = 5;
+export const URANIUM_MINING_AMOUNT = 1;
 
-const TANK_SPEED = 5;
-const TANK_HP = 45;
-const TANK_AD = 15;
+export const TANK_SPEED = 5;
+export const TANK_HP = 45;
+export const TANK_AD = 15;
 
-const PLAYERS = [
+export const PLAYERS = [
     { id: 1, x: 2, y: 6 },
     { id: 2, x: 22, y: 6 },
 ];
 
-const RESOURCES = [
+export const RESOURCES = [
     { id: "rr1", x: 5, y: 8, type: "rock" },
     { id: "rr2", x: 6, y: 5, type: "rock" },
     { id: "rr3", x: 4, y: 3, type: "rock" },
@@ -35,9 +35,9 @@ const RESOURCES = [
     { id: "ri4", x: 20, y: 10, type: "iron" },
 ];
 
-const TILE_SIZE = 64;
+export const TILE_SIZE = 64;
 
-const ASSETS_MAP = {
+export const ASSETS_MAP = {
     DIRT: { x: 0, y: 0, w: TILE_SIZE, h: TILE_SIZE },
     TREE: { x: 2 * TILE_SIZE, y: TILE_SIZE, w: TILE_SIZE, h: TILE_SIZE },
     ROAD_VER_END: { x: 8 * TILE_SIZE, y: 2 * TILE_SIZE, w: TILE_SIZE, h: TILE_SIZE },
@@ -57,7 +57,7 @@ const ASSETS_MAP = {
     TANK_GREEN: { x: 15 * TILE_SIZE, y: 5 * TILE_SIZE, w: TILE_SIZE, h: TILE_SIZE },
 };
 
-const shortHands = {
+export const shortHands = {
     'T': { name: "TREE", background: true, rotate: 0 },
     '.': { name: "DIRT", background: true, rotate: 0 },
     'O': { name: "ROAD_VER_END", background: true, rotate: 0 },
@@ -67,7 +67,7 @@ const shortHands = {
     '+': { name: "CROSS_4", background: true, rotate: 0 }
 };
 
-const mapBlueprint = [
+export const mapBlueprint = [
     "TTTTTTTTTTTTTTTTTTTTTTTTT",
     "T.......................T",
     "T.......................T",
@@ -83,7 +83,7 @@ const mapBlueprint = [
     "TTTTTTTTTTTTTTTTTTTTTTTTT"
 ];
 
-const worldMap = mapBlueprint.map(row =>
+export const WORLD_MAP = mapBlueprint.map(row =>
     row.split('').map(char => {
         return shortHands[char] || shortHands['.'];
     })

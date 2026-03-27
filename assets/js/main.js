@@ -1,6 +1,8 @@
 "use strict";
 
-let game = new GameScene("canvas", "assets/imgs/scifi_tilesheet.png");
+import GameScene from './GameScene.js';
+
+const game = new GameScene("canvas", "assets/imgs/scifi_tilesheet.png");
 let lastTime = 0;
 
 function loop(currentTime) {
