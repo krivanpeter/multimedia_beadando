@@ -18,7 +18,6 @@ export default class Player {
         let workerX = (this.number === 1) ? x + 1 : x - 1;
         let worker = new WorkerUnit(`wu${this.number}`, workerX, y, this.number, this.base);
 
-        // FELIRATKOZÁS: Figyeljük, ha a munkás lead valamit
         worker.on('delivery', (data) => {
             this.addResource(data.type, data.amount);
         });

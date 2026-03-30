@@ -2,24 +2,24 @@ import Unit from './Unit.js';
 import { WORKER_HP, WORKER_SPEED, ROCK_MINING_AMOUNT, IRON_MINING_AMOUNT, URANIUM_MINING_AMOUNT } from '../initSettings.js';
 
 export default class WorkerUnit extends Unit {
-    constructor(id, x, y, playerId, base) {
+    constructor(id, gridX, gridY, playerId, base) {
         const assetKey = (playerId === 1) ? "WORKER_BLUE" : "WORKER_GREEN";
-        super(id, x, y, assetKey, playerId, WORKER_HP, WORKER_SPEED);
+        super(id, gridX, gridY, assetKey, playerId, WORKER_HP, WORKER_SPEED);
 
         this.base = base;
-        this.target = { x: null, y: null };
-        this.resource = { x: null, y: null, type: null };
+        this.target = { gridX: null, gridY: null };
+        this.resource = { gridX: null, gridY: null, type: null };
         this.hasTarget = false;
         this.isReturning = false;
     }
 
     setTarget(res) {
-        this.resource.x = res.x;
-        this.resource.y = res.y;
+        this.resource.gridX = res.gridX + this.getOffsetForResource();
+        this.resource.gridY = res.gridY + this.getOffsetForResource();
         this.resource.type = res.type;
 
-        this.target.x = this.resource.x;
-        this.target.y = this.resource.y;
+        this.target.gridX = this.resource.gridX;
+        this.target.gridY = this.resource.gridY;
 
         this.isReturning = false;
         this.hasTarget = true;
@@ -44,19 +44,13 @@ export default class WorkerUnit extends Unit {
                 this.isReturning = true;
                 this.target.x = this.base.x;
                 this.target.y = this.base.y;
-                console.log(this.resource.type + " begyűjtve, irány a bázis!");
-            } else {
-                this.emit('delivery', {
-                    type: this.resource.type,
-                    amount: this.getResourceAmount()
-                });
-
-                this.isReturning = false;
-                this.target.x = this.resource.x;
-                this.target.y = this.resource.y;
-                console.log(this.resource.type + " leadva! Megyek vissza bányászni.");
-            }
+                console.log(this.resource.type + " begyűjtve");
+            } 
         }
+    }
+
+    getOffsetForResource(){
+        return (this.playerId === 1) ? -1 : 1;
     }
 
     getResourceAmount() {

@@ -3,6 +3,8 @@
 export const RES_W = 1280;
 export const RES_H = 1080;
 
+export const ACTION_POINTS = 3;
+
 export const BASE_HP = 100;
 
 export const WORKER_SPEED = 2;

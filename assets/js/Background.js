@@ -17,9 +17,6 @@ export default class Background {
                 const dx = colIndex * TILE_SIZE;
                 const dy = rowIndex * TILE_SIZE;
 
-                if (!tileData.background) {
-                    this.drawDirt(ctx, spriteSheet, dx, dy);
-                }
                 if (tileData.rotate !== 0) {
                     this.drawRotated(ctx, spriteSheet, asset, dx, dy, tileData.rotate);
                 } else {
@@ -29,16 +26,15 @@ export default class Background {
                         dx, dy, TILE_SIZE, TILE_SIZE
                     );
                 }
+                this.drawGrid(ctx, dx, dy);
             });
         });
     }
 
-    drawDirt(ctx, spriteSheet, dx, dy) {
-        ctx.drawImage(
-            spriteSheet,
-            ASSETS_MAP.DIRT.x, ASSETS_MAP.DIRT.y, ASSETS_MAP.DIRT.w, ASSETS_MAP.DIRT.h,
-            dx, dy, TILE_SIZE, TILE_SIZE
-        );
+    drawGrid(ctx, dx, dy) {
+        ctx.beginPath();
+        ctx.rect(dx, dy, TILE_SIZE, TILE_SIZE);
+        ctx.stroke();
     }
 
     drawRotated(ctx, spriteSheet, asset, dx, dy, rotateAngle) {
