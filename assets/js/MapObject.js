@@ -1,8 +1,8 @@
 import Entity from './Entity.js';
 
 export default class MapObject extends Entity {
-    constructor(id, x, y, assetKey) {
-        super(id, x, y, assetKey);
+    constructor(id, gridX, gridY, assetKey) {
+        super(id, gridX, gridY, assetKey);
         this.clickable = true;
     }
 }

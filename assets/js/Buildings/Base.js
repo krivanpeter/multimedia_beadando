@@ -2,9 +2,9 @@ import Building from './Building.js';
 import { TILE_SIZE, BASE_HP } from '../initSettings.js';
 
 export default class Base extends Building {
-    constructor(id, x, y, playerId) {
+    constructor(id, gridX, gridY, playerId) {
         const assetKey = "BASE";
-        super(id, x, y, assetKey, playerId, BASE_HP);
+        super(id, gridX, gridY, assetKey, playerId, BASE_HP);
     }
 
     draw(ctx, spriteSheet) {

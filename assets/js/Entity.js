@@ -31,4 +31,8 @@ export default class Entity extends EventEmitter {
             mouseY >= this.y && mouseY <= this.y + TILE_SIZE
         );
     }
+
+    onCLick(){
+        
+    }
 }
