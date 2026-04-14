@@ -3,7 +3,7 @@
 export const RES_W = 1600;
 export const RES_H = 832;
 
-export const ACTION_POINTS = 3;
+export const ACTION_POINTS = 10;
 
 export const BASE_HP = 100;
 
@@ -19,8 +19,8 @@ export const TANK_HP = 45;
 export const TANK_AD = 15;
 
 export const PLAYERS = [
-    { id: 1, x: 2, y: 6 },
-    { id: 2, x: 22, y: 6 },
+    { name:"Peti", id: 1, x: 2, y: 6 },
+    { name:"A vesztes", id: 2, x: 22, y: 6 },
 ];
 
 export const RESOURCES = [

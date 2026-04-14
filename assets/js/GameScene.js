@@ -1,7 +1,7 @@
 import Background from './Background.js';
 import Player from './Player.js';
 import Resource from './Resource.js';
-import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, RESOURCES } from './initSettings.js';
+import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, ACTION_POINTS, PLAYERS, RESOURCES } from './initSettings.js';
 
 export default class GameScene {
     constructor(canvasId, spriteSheetSrc) {
@@ -16,6 +16,7 @@ export default class GameScene {
         this.map = null;
 
         this.selectedUnit = null;
+        this.currentPlayer = null;
     }
 
     start(callback) {
@@ -29,8 +30,12 @@ export default class GameScene {
     init() {
         this.map = new Background(WORLD_MAP, TILE_SIZE, RES_W, RES_H);
 
-        PLAYERS.forEach(p => this.players.push(new Player(p.id, p.x, p.y)));
+        PLAYERS.forEach(p => this.players.push(new Player(p.name, p.id, p.x, p.y)));
         RESOURCES.forEach(res => this.resources.push(new Resource(res.id, res.x, res.y, res.type)));
+        this.currentPlayer = this.players[0];
+        console.log(this.currentPlayer);
+        $("#currentPlayer").text(this.currentPlayer.name);
+        $("#currentPlayer").css("color", "blue");
     }
 
     setupInputs() {
@@ -51,13 +56,11 @@ export default class GameScene {
     }
 
     handleMouseDownForUnits(mouseX, mouseY) {
-        this.players.forEach(player => {
-            player.entities.forEach(entity => {
-                if (entity.contains(mouseX, mouseY)) {
-                    this.selectedUnit = entity;
-                    entity.onClick();
-                }
-            });
+        this.currentPlayer.entities.forEach(entity => {
+            if (entity.contains(mouseX, mouseY)) {
+                this.selectedUnit = entity;
+                entity.onClick();
+            }
         });
     }
 
@@ -70,10 +73,8 @@ export default class GameScene {
     }
 
     update(dt) {
-        this.players.forEach(p => {
-            p.entities.forEach(e => {
-                if (e.update) e.update(dt);
-            });
+        this.currentPlayer.entities.forEach(e => {
+            if (e.update) e.update(dt);
         });
     }
 

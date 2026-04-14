@@ -1,12 +1,15 @@
 import Base from './Buildings/Base.js';
 import WorkerUnit from './Units/WorkerUnit.js';
+import { ACTION_POINTS } from './initSettings.js';
 
 export default class Player {
-    constructor(number, baseX, baseY) {
+    constructor(name, number, baseX, baseY) {
+        this.name = name;
         this.number = number;
         this.entities = [];
         this.resources = { rock: 0, iron: 0, uranium: 0 }
         this.init(baseX, baseY);
+        this.ap = ACTION_POINTS;
     }
 
     init(x, y) {

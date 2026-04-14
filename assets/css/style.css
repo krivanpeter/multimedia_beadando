@@ -3,11 +3,14 @@ body {
     margin: 0;
     display: flex;
     justify-content: center;
-    min-height: 100vh;
 }
 
 img {
     margin: 0 10px;
+}
+
+.amount{
+    width: 25px;
 }
 
 .game-wrapper {
@@ -27,15 +30,13 @@ img {
     box-sizing: border-box;
 }
 
-.game_round {
-    
-}
+/* .game_round {
+
+} */
 
 .player_resources {
     display: flex;
     align-items: center;
-    padding: 10px;
-    background-color: rgb(3, 3, 88);
 }
 
 #p2gui {

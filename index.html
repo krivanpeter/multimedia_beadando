@@ -14,20 +14,25 @@
     <div class="game-wrapper">
         <div class="gui">
             <div id="p1gui" class="player_resources">
-                <img src="assets/imgs/rock.png" alt="Player 1 rocks"><span id="rock1">0</span>
-                <img src="assets/imgs/iron.png" alt="Player 1 rocks"><span id="iron1">0</span>
-                <img src="assets/imgs/uranium.png" alt="Player 1 rocks"><span id="uranium1">0</span>
+                <img src="assets/imgs/rock.png" alt="Player 1 rocks"><span class="amount" id="rock1">0</span>
+                <img src="assets/imgs/iron.png" alt="Player 1 rocks"><span class="amount" id="iron1">0</span>
+                <img src="assets/imgs/uranium.png" alt="Player 1 rocks"><span class="amount" id="uranium1">0</span>
             </div>
             <div class="game_round">
-                <div>
-                    <span>Action Points:</span><span>10</span>
-                    <button>HELÓ</button>
+                <div style="text-align: center;">
+                    <p>
+                        <span>Jelenlegi játékos:</span>
+                        <span id="currentPlayer"></span>
+                    </p>
+                    <p><span>Action Points:</span><span>10</span>
+                    <p>
+                        <button>RESET</button>
                 </div>
             </div>
             <div id="p2gui" class="player_resources">
-                <img src="assets/imgs/rock.png" alt="Player 2 rocks"><span id="rock2">0</span>
-                <img src="assets/imgs/iron.png" alt="Player 2 rocks"><span id="iron2">0</span>
-                <img src="assets/imgs/uranium.png" alt="Player 2 rocks"><span id="uranium2">0</span>
+                <img src="assets/imgs/rock.png" alt="Player 2 rocks"><span class="amount" id="rock2">0</span>
+                <img src="assets/imgs/iron.png" alt="Player 2 rocks"><span class="amount" id="iron2">0</span>
+                <img src="assets/imgs/uranium.png" alt="Player 2 rocks"><span class="amount" id="uranium2">0</span>
             </div>
         </div>
         <canvas id="canvas"></canvas>
