@@ -11,21 +11,29 @@
 </style>
 
 <body>
-    <canvas id="canvas" width="1600px" height="830px"></canvas>
-    <div class="resources">
-        <div id="p1gui" class="player_resources">
-            <div>Rock:<span id="rock1">0</span></div>
-            <div>Iron:<span id="iron1">0</span></div>
-            <div>Uranium:<span id="uranium1">0</span></div>
+    <div class="game-wrapper">
+        <div class="gui">
+            <div id="p1gui" class="player_resources">
+                <img src="assets/imgs/rock.png" alt="Player 1 rocks"><span id="rock1">0</span>
+                <img src="assets/imgs/iron.png" alt="Player 1 rocks"><span id="iron1">0</span>
+                <img src="assets/imgs/uranium.png" alt="Player 1 rocks"><span id="uranium1">0</span>
+            </div>
+            <div class="game_round">
+                <div>
+                    <span>Action Points:</span><span>10</span>
+                    <button>HELÓ</button>
+                </div>
+            </div>
+            <div id="p2gui" class="player_resources">
+                <img src="assets/imgs/rock.png" alt="Player 2 rocks"><span id="rock2">0</span>
+                <img src="assets/imgs/iron.png" alt="Player 2 rocks"><span id="iron2">0</span>
+                <img src="assets/imgs/uranium.png" alt="Player 2 rocks"><span id="uranium2">0</span>
+            </div>
         </div>
-
-        <div id="p2gui" class="player_resources">
-            <div>Rock:<span id="rock2">0</span></div>
-            <div>Iron:<span id="iron2">0</span></div>
-            <div>Uranium:<span id="uranium2">0</span></div>
-        </div>
+        <canvas id="canvas"></canvas>
     </div>
 </body>
+<script type="module" src="assets/js/jquery.min.js"></script>
 <script type="module" src="assets/js/main.js"></script>
 
 </html>

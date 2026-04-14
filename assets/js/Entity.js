@@ -11,8 +11,6 @@ export default class Entity extends EventEmitter {
         this.y = y * TILE_SIZE;
         this.asset = ASSETS_MAP[assetKey];
         this.playerId = playerId;
-        this.clickable = true;
-        this.clicked = false;
     }
 
     draw(ctx, spriteSheet) {
@@ -30,9 +28,5 @@ export default class Entity extends EventEmitter {
             mouseX >= this.x && mouseX <= this.x + TILE_SIZE &&
             mouseY >= this.y && mouseY <= this.y + TILE_SIZE
         );
-    }
-
-    onCLick(){
-        
     }
 }

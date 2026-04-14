@@ -1,12 +1,43 @@
-body{
-    background-color: rgb(1, 1, 68);
+body {
+    background-color: rgb(1, 1, 53);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
 }
 
-.resources {
+img {
+    margin: 0 10px;
+}
+
+.game-wrapper {
+    top: 20px;
+    position: relative;
+    width: 1600px;
+    height: 832px;
+}
+
+.gui {
     display: flex;
     color: white;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 20px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.game_round {
+    
 }
 
 .player_resources {
-    width: 50%;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: rgb(3, 3, 88);
+}
+
+#p2gui {
+    justify-content: flex-end;
 }

@@ -14,12 +14,12 @@ export default class WorkerUnit extends Unit {
         super(id, gridX, gridY, assetKey, playerId, WORKER_HP, WORKER_SPEED);
 
         this.base = base;
-
-        this.target = { gridX: null, gridY: null, x: null, y: null };
+        this.startX = gridX;
+        this.startY = gridY;
+        this.target = { gridX: null, gridY: null };
         this.resource = { gridX: null, gridY: null, type: null };
 
         this.state = "idle";
-        this.hasTarget = false;
     }
 
     setTarget(res) {
@@ -27,97 +27,86 @@ export default class WorkerUnit extends Unit {
         this.resource.gridY = res.gridY;
         this.resource.type = res.type;
 
-        const closest = this.getClosestAdjacentToBase(res.gridX, res.gridY);
-
-        this.target.gridX = closest.gridX;
-        this.target.gridY = closest.gridY;
+        this.target.gridX = res.gridX;
+        this.target.gridY = res.gridY;
 
         this.state = "toResource";
-        this.hasTarget = true;
     }
 
+    get targetXpx() { return this.target.gridX * TILE_SIZE; }
+    get targetYpx() { return this.target.gridY * TILE_SIZE; }
+
     update(dt) {
-        if (!this.hasTarget) return;
+        if (this.state === "idle") {
+            this.clickable = true;
+            return;
+        }
 
+        if (this.isAtTarget()) {
+            this.handleArrival();
+        } else {
+            this.moveTowardsTarget(dt);
+        }
+
+    }
+
+    isAtTarget() {
+        const arriveEps = 2;
+
+        return Math.abs(this.targetXpx - this.x) <= arriveEps &&
+            Math.abs(this.targetYpx - this.y) <= arriveEps;
+    }
+
+    handleArrival() {
+        this.x = this.targetXpx;
+        this.y = this.targetYpx;
+        this.gridX = this.target.gridX;
+        this.gridY = this.target.gridY;
+
+        switch (this.state) {
+            case "toResource": this.arrivedAtResource(); break;
+            case "toBase": this.arrivedAtBase(); break;
+            case "toStart": this.arrivedAtStart(); break;
+        }
+    }
+
+    arrivedAtResource() {
+        const baseGridX = Math.round(this.base.x / TILE_SIZE);
+        const baseGridY = Math.round(this.base.y / TILE_SIZE);
+
+        this.target.gridX = baseGridX;
+        this.target.gridY = baseGridY;
+        this.state = "toBase";
+    }
+
+    arrivedAtBase() {
+        this.emit("delivery", {
+            type: this.resource.type,
+            amount: this.getResourceAmount()
+        });
+
+        this.target.gridX = this.startX;
+        this.target.gridY = this.startY;
+        this.state = "toStart";
+    }
+
+    arrivedAtStart() {
+        this.state = "idle";
+    }
+
+    moveTowardsTarget(dt) {
         const moveStep = this.speed * dt * 100;
-
         const targetXpx = this.target.gridX * TILE_SIZE;
         const targetYpx = this.target.gridY * TILE_SIZE;
 
         const dx = targetXpx - this.x;
         const dy = targetYpx - this.y;
 
-        const arriveEps = 2;
-
-        if (Math.abs(dx) <= arriveEps && Math.abs(dy) <= arriveEps) {
-            this.x = targetXpx;
-            this.y = targetYpx;
-            this.gridX = this.target.gridX;
-            this.gridY = this.target.gridY;
-
-            if (this.state === "toResource") {
-                console.log(this.resource.type + " begyűjtve");
-
-                const baseGridX = Math.round(this.base.x / TILE_SIZE);
-                const baseGridY = Math.round(this.base.y / TILE_SIZE);
-
-                this.target.gridX = baseGridX;
-                this.target.gridY = baseGridY;
-
-                this.state = "toBase";
-                return;
-            }
-
-            if (this.state === "toBase") {
-                this.state = "idle";
-                this.hasTarget = false;
-                return;
-            }
-
-            return;
+        if (Math.abs(dx) > 0.1) {
+            this.x += Math.sign(dx) * Math.min(moveStep, Math.abs(dx));
+        } else if (Math.abs(dy) > 0.1) {
+            this.y += Math.sign(dy) * Math.min(moveStep, Math.abs(dy));
         }
-
-        if (Math.abs(dx) > arriveEps) {
-            let step = Math.sign(dx) * moveStep;
-            if (Math.abs(step) > Math.abs(dx)) step = dx;
-            this.x += step;
-        } else if (Math.abs(dy) > arriveEps) {
-            let step = Math.sign(dy) * moveStep;
-            if (Math.abs(step) > Math.abs(dy)) step = dy;
-            this.y += step;
-        }
-
-        this.gridX = this.x / TILE_SIZE;
-        this.gridY = this.y / TILE_SIZE;
-    }
-
-    getClosestAdjacentToBase(resGridX, resGridY) {
-        const baseGridX = Math.round(this.base.x / TILE_SIZE);
-        const baseGridY = Math.round(this.base.y / TILE_SIZE);
-
-        const candidates = [
-            { gridX: resGridX - 1, gridY: resGridY },
-            { gridX: resGridX + 1, gridY: resGridY },
-            { gridX: resGridX, gridY: resGridY - 1 },
-            { gridX: resGridX, gridY: resGridY + 1 },
-        ];
-
-        const list = candidates;
-
-        const dist = (a) => Math.abs(a.gridX - baseGridX) + Math.abs(a.gridY - baseGridY);
-
-        let best = list[0];
-        let bestD = dist(best);
-
-        for (let i = 1; i < list.length; i++) {
-            const d = dist(list[i]);
-            if (d < bestD) {
-                best = list[i];
-                bestD = d;
-            }
-        }
-
-        return best;
     }
 
     getResourceAmount() {
@@ -127,10 +116,5 @@ export default class WorkerUnit extends Unit {
             case "uranium": return URANIUM_MINING_AMOUNT;
             default: return 0;
         }
-    }
-
-    onClick() {
-        console.log("I'm clicked:", this);
-        this.clicked = true;
     }
 }

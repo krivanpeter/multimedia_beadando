@@ -5,4 +5,8 @@ export default class MapObject extends Entity {
         super(id, gridX, gridY, assetKey);
         this.clickable = true;
     }
+
+    onClick(){
+        console.log("clicked:", this);
+    }
 }

@@ -1,7 +1,7 @@
 "use strict";
 
-export const RES_W = 1280;
-export const RES_H = 1080;
+export const RES_W = 1600;
+export const RES_H = 832;
 
 export const ACTION_POINTS = 3;
 
@@ -90,3 +90,8 @@ export const WORLD_MAP = mapBlueprint.map(row =>
         return shortHands[char] || shortHands['.'];
     })
 );
+
+$("#canvas").attr({
+    "width": RES_W,
+    "height": RES_H
+});

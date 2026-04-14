@@ -5,9 +5,7 @@ export default class Player {
     constructor(number, baseX, baseY) {
         this.number = number;
         this.entities = [];
-        this.rock = 0;
-        this.iron = 0;
-        this.uranium = 0;
+        this.resources = { rock: 0, iron: 0, uranium: 0 }
         this.init(baseX, baseY);
     }
 
@@ -26,10 +24,9 @@ export default class Player {
     }
 
     addResource(type, amount) {
-        if (this.hasOwnProperty(type)) {
-            this[type] += amount;
-            console.log(`Player ${this.number} kapott ${amount} egységnyi ${type}-ot!`);
-        }
+        this.resources[type] += amount;
+        let newVal = parseInt($("#" + type + this.number).text()) + parseInt(amount);
+        $("#" + type + this.number).text(newVal);
     }
 
     draw(ctx, spriteSheet) {

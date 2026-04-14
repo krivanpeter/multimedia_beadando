@@ -38,8 +38,10 @@ export default class GameScene {
     }
 
     handleMouseDown(e) {
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
+        const rect = this.canvas.getBoundingClientRect();
+
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
 
         this.handleMouseDownForUnits(mouseX, mouseY);
 
@@ -61,7 +63,7 @@ export default class GameScene {
 
     handleMouseDownForResources(mouseX, mouseY) {
         this.resources.forEach(res => {
-            if (res.contains(mouseX, mouseY)) {
+            if (res.contains(mouseX, mouseY) && this.selectedUnit.state === "idle") {
                 this.selectedUnit.setTarget(res);
             }
         });

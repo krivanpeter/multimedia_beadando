@@ -11,4 +11,8 @@ export default class Unit extends Entity {
         this.isMoving = false;
         this.clickable = true;
     }
+
+    onClick(){
+        this.clickable = false;
+    }
 }
