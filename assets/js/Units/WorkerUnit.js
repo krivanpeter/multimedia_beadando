@@ -5,7 +5,6 @@ import {
     ROCK_MINING_AMOUNT,
     IRON_MINING_AMOUNT,
     URANIUM_MINING_AMOUNT,
-    TILE_SIZE
 } from '../initSettings.js';
 
 export default class WorkerUnit extends Unit {

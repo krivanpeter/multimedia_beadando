@@ -1,6 +1,7 @@
 import Background from './Background.js';
 import Player from './Player.js';
 import Resource from './Resource.js';
+import Unit from './Units/Unit.js';
 import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES } from './initSettings.js';
 
 export default class GameScene {
@@ -16,7 +17,6 @@ export default class GameScene {
         this.map = null;
 
         this.currentPlayer = null;
-        this.selectedUnit = null;
 
         this.hoveredGrid = null;
         this.currentPath = [];
@@ -37,6 +37,7 @@ export default class GameScene {
         PLAYERS.forEach(p => this.players.push(new Player(p.name, p.id, p.color, p.x, p.y)));
         RESOURCES.forEach(res => this.resources.push(new Resource(res.id, res.x, res.y, res.type)));
         this.currentPlayer = this.players[0];
+
         $("#currentPlayer").text(this.currentPlayer.name);
         $("#currentPlayer").css("color", this.currentPlayer.color);
     }
@@ -59,6 +60,7 @@ export default class GameScene {
 
         if (this.currentPlayer.ap >= this.pathDistance) {
             this.currentPlayer.handleInteraction(clickedEntity, gridPos, this.pathDistance);
+            this.isThereMovement = true;
         }
         this.currentPath = [];
         this.pathDistance = 0;
@@ -101,6 +103,11 @@ export default class GameScene {
         this.currentPlayer.entities.forEach(e => {
             if (e.update) e.update(dt);
         });
+
+        const isMoving = this.currentPlayer.entities.some(e =>
+            e instanceof Unit && e.state !== "idle"
+        );
+        $("#endTurn").prop('disabled', isMoving);
     }
 
     render() {
@@ -168,8 +175,9 @@ export default class GameScene {
     }
 
     updateUI() {
+        this.currentPlayer.updateAp();
         $("#currentPlayer").text(this.currentPlayer.name);
         $("#currentPlayer").css("color", this.currentPlayer.color);
-        this.currentPlayer.updateAp();
+        $("#currentPlayer").fadeOut(100).fadeIn(100);
     }
 }

@@ -67,7 +67,7 @@ export default class Player {
     }
 
     updateAp(ap = null) {
-        if(ap == null) this.ap = ACTION_POINTS;
+        if (ap == null) this.ap = ACTION_POINTS;
         this.ap -= ap;
         $("#ap").text(this.ap);
     }
