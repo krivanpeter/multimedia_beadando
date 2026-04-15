@@ -33,8 +33,7 @@ export default class Unit extends Entity {
 
     isAtTarget() {
         const arriveEps = 2;
-        return Math.abs(this.targetXpx - this.x) <= arriveEps &&
-                Math.abs(this.targetYpx - this.y) <= arriveEps;
+        return Math.abs(this.targetXpx - this.x) <= arriveEps && Math.abs(this.targetYpx - this.y) <= arriveEps;
     }
 
     moveTowardsTarget(dt) {

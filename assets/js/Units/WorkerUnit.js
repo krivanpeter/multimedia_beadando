@@ -64,7 +64,7 @@ export default class WorkerUnit extends Unit {
         });
         this.target.gridX = this.startX;
         this.target.gridY = this.startY;
-        
+
         this.state = "toStart";
         console.log("Leadva, irány vissza a startra!");
     }

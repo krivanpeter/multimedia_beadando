@@ -1,7 +1,7 @@
 import Background from './Background.js';
 import Player from './Player.js';
 import Resource from './Resource.js';
-import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, ACTION_POINTS, PLAYERS, RESOURCES } from './initSettings.js';
+import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, RESOURCES } from './initSettings.js';
 
 export default class GameScene {
     constructor(canvasId, spriteSheetSrc) {
@@ -15,8 +15,12 @@ export default class GameScene {
         this.resources = [];
         this.map = null;
 
-        this.selectedUnit = null;
         this.currentPlayer = null;
+        this.selectedUnit = null;
+
+        this.hoveredGrid = null;
+        this.currentPath = [];
+        this.pathDistance = 0;
     }
 
     start(callback) {
@@ -39,6 +43,7 @@ export default class GameScene {
 
     setupInputs() {
         this.canvas.addEventListener("mousedown", (e) => this.handleMouseDown(e));
+        this.canvas.addEventListener("mousemove", (e) => this.handleMouseMove(e));
     }
 
     handleMouseDown(e) {
@@ -51,7 +56,44 @@ export default class GameScene {
             this.players.flatMap(p => p.entities).find(en => en.contains(mouseX, mouseY)) ||
             this.resources.find(res => res.contains(mouseX, mouseY));
 
-        this.currentPlayer.handleInteraction(clickedEntity, gridPos);
+        if (this.currentPlayer.ap >= this.pathDistance) {
+            this.currentPlayer.handleInteraction(clickedEntity, gridPos, this.pathDistance);
+        }
+        this.currentPath = [];
+        this.pathDistance = 0;
+    }
+
+    handleMouseMove(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        const gridPos = this.getGridPos(mouseX, mouseY);
+
+        this.hoveredGrid = gridPos;
+        this.currentPath = [];
+
+        const selected = this.currentPlayer.selectedUnit;
+
+        if (selected && selected.state === "idle") {
+            const startX = selected.gridX;
+            const startY = selected.gridY;
+            const endX = gridPos.gridX;
+            const endY = gridPos.gridY;
+
+            const xDir = Math.sign(endX - startX);
+            for (let x = startX; x !== endX + xDir; x += xDir) {
+                if (xDir === 0) break;
+                this.currentPath.push({ gridX: x, gridY: startY });
+            }
+
+            const yDir = Math.sign(endY - startY);
+            for (let y = startY + yDir; y !== endY + yDir; y += yDir) {
+                if (yDir === 0) break;
+                this.currentPath.push({ gridX: endX, gridY: y });
+            }
+
+            this.pathDistance = Math.abs(endX - startX) + Math.abs(endY - startY);
+        }
     }
 
     update(dt) {
@@ -64,6 +106,42 @@ export default class GameScene {
         this.map.draw(this.ctx, this.spriteSheet);
         this.resources.forEach(r => r.draw(this.ctx, this.spriteSheet));
         this.players.forEach(p => p.draw(this.ctx, this.spriteSheet));
+
+        this.renderPath();
+    }
+
+    renderPath() {
+        if (this.currentPath && this.currentPath.length > 0) {
+            this.ctx.save();
+            this.ctx.fillStyle = "rgba(43, 250, 205, 0.2)";
+
+            this.currentPath.forEach(tile => {
+                this.ctx.fillRect(
+                    tile.gridX * TILE_SIZE,
+                    tile.gridY * TILE_SIZE,
+                    TILE_SIZE,
+                    TILE_SIZE
+                );
+            });
+
+            if (this.pathDistance > 0) {
+                this.ctx.fillStyle = this.getFillStyleForAp();
+                this.ctx.font = "bold 14px Arial";
+                this.ctx.fillText(
+                    `${this.pathDistance} AP`,
+                    this.hoveredGrid.gridX * TILE_SIZE + TILE_SIZE / 4,
+                    this.hoveredGrid.gridY * TILE_SIZE + TILE_SIZE / 2,
+                );
+            }
+            this.ctx.restore();
+        }
+    }
+
+    getFillStyleForAp() {
+        if (this.pathDistance > this.currentPlayer.ap) {
+            return "red";
+        }
+        return "white";
     }
 
     getGridPos(mouseX, mouseY) {

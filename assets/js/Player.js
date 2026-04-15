@@ -10,8 +10,9 @@ export default class Player {
         this.number = number;
         this.entities = [];
         this.resources = { rock: 0, iron: 0, uranium: 0 }
-        this.init(baseX, baseY);
+        this.selectedUnit = null;
         this.ap = ACTION_POINTS;
+        this.init(baseX, baseY);
     }
 
     init(x, y) {
@@ -34,11 +35,11 @@ export default class Player {
         $("#" + type + this.number).text(newVal);
     }
 
-    handleInteraction(target, gridPos) {
+    handleInteraction(target, gridPos, ap) {
         if (target instanceof Unit && target.playerId === this.number) {
             this.selectUnit(target);
         } else if (this.selectedUnit && this.selectedUnit.state === "idle") {
-            this.issueCommand(target, gridPos);
+            this.issueCommand(target, gridPos, ap);
         }
     }
 
@@ -53,7 +54,7 @@ export default class Player {
         }
     }
 
-    issueCommand(target, gridPos) {
+    issueCommand(target, gridPos, ap) {
         if (target instanceof Resource) {
             this.selectedUnit.setTarget("res", target);
         } else {
@@ -61,6 +62,12 @@ export default class Player {
         }
         this.selectedUnit.isHighlighted = false;
         this.selectedUnit = null;
+        this.updateAp(ap);
+    }
+
+    updateAp(ap) {
+        this.ap -= ap;
+        $("#ap").text(this.ap);
     }
 
     draw(ctx, spriteSheet) {
