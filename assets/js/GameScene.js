@@ -54,6 +54,8 @@ export default class GameScene {
         const mouseY = e.clientY - rect.top;
         const gridPos = this.getGridPos(mouseX, mouseY);
 
+        if (!this.isValidGridPos(gridPos.gridX, gridPos.gridY)) return;
+
         const clickedEntity =
             this.players.flatMap(p => p.entities).find(en => en.contains(mouseX, mouseY)) ||
             this.resources.find(res => res.contains(mouseX, mouseY));
@@ -77,7 +79,7 @@ export default class GameScene {
 
         const selected = this.currentPlayer.selectedUnit;
 
-        if (selected && selected.state === "idle") {
+        if (selected && selected.state === "idle" && this.isValidGridPos(gridPos.gridX, gridPos.gridY)) {
             const startX = selected.gridX;
             const startY = selected.gridY;
             const endX = gridPos.gridX;
@@ -96,6 +98,8 @@ export default class GameScene {
             }
 
             this.pathDistance = Math.abs(endX - startX) + Math.abs(endY - startY);
+        } else {
+            this.pathDistance = 0;
         }
     }
 
@@ -172,6 +176,14 @@ export default class GameScene {
         this.currentPlayer = (this.currentPlayer.id == 1) ? this.players[1] : this.players[0];
 
         this.updateUI();
+    }
+
+    isValidGridPos(gridX, gridY) {
+        const mapWidth = WORLD_MAP[0].length;
+        const mapHeight = WORLD_MAP.length;
+
+        return gridX > 0 && gridX < mapWidth - 1 &&
+            gridY > 0 && gridY < mapHeight - 1;
     }
 
     updateUI() {
