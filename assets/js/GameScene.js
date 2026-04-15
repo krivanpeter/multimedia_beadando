@@ -1,6 +1,7 @@
 import Background from './Background.js';
 import Player from './Player.js';
 import Resource from './Resource.js';
+import Unit from './Units/Unit.js';
 import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, ACTION_POINTS, PLAYERS, RESOURCES } from './initSettings.js';
 
 export default class GameScene {
@@ -33,7 +34,6 @@ export default class GameScene {
         PLAYERS.forEach(p => this.players.push(new Player(p.name, p.id, p.x, p.y)));
         RESOURCES.forEach(res => this.resources.push(new Resource(res.id, res.x, res.y, res.type)));
         this.currentPlayer = this.players[0];
-        console.log(this.currentPlayer);
         $("#currentPlayer").text(this.currentPlayer.name);
         $("#currentPlayer").css("color", "blue");
     }
@@ -44,32 +44,46 @@ export default class GameScene {
 
     handleMouseDown(e) {
         const rect = this.canvas.getBoundingClientRect();
-
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
 
-        this.handleMouseDownForUnits(mouseX, mouseY);
+        const clickedUnit = this.currentPlayer.entities.find(entity =>
+            entity instanceof Unit && entity.contains(mouseX, mouseY)
+        );
 
-        if (this.selectedUnit) {
-            this.handleMouseDownForResources(mouseX, mouseY);
+        if (clickedUnit) {
+            this.selectUnit(clickedUnit);
+            return;
+        }
+
+        if (this.selectedUnit && this.selectedUnit.state === "idle") {
+            this.issueCommand(mouseX, mouseY);
         }
     }
 
-    handleMouseDownForUnits(mouseX, mouseY) {
-        this.currentPlayer.entities.forEach(entity => {
-            if (entity.contains(mouseX, mouseY)) {
-                this.selectedUnit = entity;
-                entity.onClick();
-            }
-        });
+    selectUnit(unit) {
+        if (this.selectedUnit) {
+            this.selectedUnit.isHighlighted = false;
+        }
+
+        if (this.selectedUnit === unit) {
+            this.selectedUnit = null;
+        } else {
+            this.selectedUnit = unit;
+            this.selectedUnit.onClick();
+        }
     }
 
-    handleMouseDownForResources(mouseX, mouseY) {
-        this.resources.forEach(res => {
-            if (res.contains(mouseX, mouseY) && this.selectedUnit.state === "idle") {
-                this.selectedUnit.setTarget(res);
-            }
-        });
+    issueCommand(mouseX, mouseY) {
+        const clickedResource = this.resources.find(res => res.contains(mouseX, mouseY));
+
+        if (clickedResource) {
+            this.selectedUnit.setTarget("res", clickedResource);
+        } else {
+            this.selectedUnit.setTarget("pos", this.getGridPos(mouseX, mouseY));
+        }
+        this.selectedUnit.isHighlighted = false;
+        this.selectedUnit = null;
     }
 
     update(dt) {
@@ -82,5 +96,12 @@ export default class GameScene {
         this.map.draw(this.ctx, this.spriteSheet);
         this.resources.forEach(r => r.draw(this.ctx, this.spriteSheet));
         this.players.forEach(p => p.draw(this.ctx, this.spriteSheet));
+    }
+
+    getGridPos(mouseX, mouseY) {
+        const gridX = Math.floor(mouseX / TILE_SIZE);
+        const gridY = Math.floor(mouseY / TILE_SIZE);
+
+        return { gridX, gridY };
     }
 }

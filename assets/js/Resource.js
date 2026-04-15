@@ -1,6 +1,6 @@
-import MapObject from './MapObject.js';
+import Entity from './Entity.js';
 
-export default class Resource extends MapObject {
+export default class Resource extends Entity {
     constructor(id, x, y, type) {
         const types = { rock: "ROCK", iron: "IRON", uranium: "URANIUM" };
         const assetKey = types[type];

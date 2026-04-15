@@ -11,6 +11,7 @@ export default class Entity extends EventEmitter {
         this.y = y * TILE_SIZE;
         this.asset = ASSETS_MAP[assetKey];
         this.playerId = playerId;
+        this.isHighlighted = false;
     }
 
     draw(ctx, spriteSheet) {
@@ -21,6 +22,13 @@ export default class Entity extends EventEmitter {
             this.asset.x, this.asset.y, this.asset.w, this.asset.h,
             this.x, this.y, TILE_SIZE, TILE_SIZE
         );
+
+        if (this.isHighlighted) {
+            ctx.save()
+            ctx.fillStyle = "rgba(43, 250, 205, 0.2)";
+            ctx.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
+            ctx.restore();
+        }
     }
 
     contains(mouseX, mouseY) {
@@ -28,5 +36,9 @@ export default class Entity extends EventEmitter {
             mouseX >= this.x && mouseX <= this.x + TILE_SIZE &&
             mouseY >= this.y && mouseY <= this.y + TILE_SIZE
         );
+    }
+
+    onClick(){
+        
     }
 }

@@ -16,67 +16,45 @@ export default class WorkerUnit extends Unit {
         this.base = base;
         this.startX = gridX;
         this.startY = gridY;
-        this.target = { gridX: null, gridY: null };
+
         this.resource = { gridX: null, gridY: null, type: null };
-
-        this.state = "idle";
     }
 
-    setTarget(res) {
-        this.resource.gridX = res.gridX;
-        this.resource.gridY = res.gridY;
-        this.resource.type = res.type;
-
-        this.target.gridX = res.gridX;
-        this.target.gridY = res.gridY;
-
-        this.state = "toResource";
-    }
-
-    get targetXpx() { return this.target.gridX * TILE_SIZE; }
-    get targetYpx() { return this.target.gridY * TILE_SIZE; }
-
-    update(dt) {
-        if (this.state === "idle") {
-            this.clickable = true;
-            return;
-        }
-
-        if (this.isAtTarget()) {
-            this.handleArrival();
+    setTarget(type, res) {
+        if (type === "res") {
+            this.resource = { gridX: res.gridX, gridY: res.gridY, type: res.type };
+            this.target.gridX = res.gridX;
+            this.target.gridY = res.gridY;
+            this.state = "toResource";
         } else {
-            this.moveTowardsTarget(dt);
+            super.setTarget(res);
+            this.state = "toTile";
         }
-
-    }
-
-    isAtTarget() {
-        const arriveEps = 2;
-
-        return Math.abs(this.targetXpx - this.x) <= arriveEps &&
-            Math.abs(this.targetYpx - this.y) <= arriveEps;
     }
 
     handleArrival() {
-        this.x = this.targetXpx;
-        this.y = this.targetYpx;
-        this.gridX = this.target.gridX;
-        this.gridY = this.target.gridY;
+        const prevState = this.state;
+        super.handleArrival();
 
-        switch (this.state) {
-            case "toResource": this.arrivedAtResource(); break;
-            case "toBase": this.arrivedAtBase(); break;
-            case "toStart": this.arrivedAtStart(); break;
+        switch (prevState) {
+            case "toResource":
+                this.arrivedAtResource();
+                break;
+            case "toBase":
+                this.arrivedAtBase();
+                break;
+            case "toStart":
+                this.state = "idle";
+                console.log("Munkás visszaért a kezdőpontra.");
+                break;
         }
     }
 
     arrivedAtResource() {
-        const baseGridX = Math.round(this.base.x / TILE_SIZE);
-        const baseGridY = Math.round(this.base.y / TILE_SIZE);
-
-        this.target.gridX = baseGridX;
-        this.target.gridY = baseGridY;
+        this.target.gridX = Math.round(this.base.x / TILE_SIZE);
+        this.target.gridY = Math.round(this.base.y / TILE_SIZE);
         this.state = "toBase";
+        console.log("Erőforrás begyűjtve, irány a bázis!");
     }
 
     arrivedAtBase() {
@@ -84,29 +62,10 @@ export default class WorkerUnit extends Unit {
             type: this.resource.type,
             amount: this.getResourceAmount()
         });
-
         this.target.gridX = this.startX;
         this.target.gridY = this.startY;
         this.state = "toStart";
-    }
-
-    arrivedAtStart() {
-        this.state = "idle";
-    }
-
-    moveTowardsTarget(dt) {
-        const moveStep = this.speed * dt * 100;
-        const targetXpx = this.target.gridX * TILE_SIZE;
-        const targetYpx = this.target.gridY * TILE_SIZE;
-
-        const dx = targetXpx - this.x;
-        const dy = targetYpx - this.y;
-
-        if (Math.abs(dx) > 0.1) {
-            this.x += Math.sign(dx) * Math.min(moveStep, Math.abs(dx));
-        } else if (Math.abs(dy) > 0.1) {
-            this.y += Math.sign(dy) * Math.min(moveStep, Math.abs(dy));
-        }
+        console.log("Leadva, irány vissza a startra!");
     }
 
     getResourceAmount() {
