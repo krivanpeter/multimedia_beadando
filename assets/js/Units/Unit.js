@@ -6,15 +6,14 @@ import {
 export default class Unit extends Entity {
     constructor(id, gridX, gridY, assetKey, playerId, maxHp, speed) {
         super(id, gridX, gridY, assetKey, playerId);
-        this.maxHp = maxHp;
-        this.currentHp = maxHp;
         this.speed = speed;
-        this.target = { gridX: null, gridY: null };
-        this.isMoving = false;
-        this.clickable = true;
+        this.target = { gridX: gridX, gridY: gridY };
         this.state = "idle";
-        this.isHighlighted = false;
+        this.clickable = true;
     }
+
+    get targetXpx() { return this.target.gridX * TILE_SIZE; }
+    get targetYpx() { return this.target.gridY * TILE_SIZE; }
 
     update(dt) {
         if (this.state === "idle") return;
@@ -27,6 +26,7 @@ export default class Unit extends Entity {
     }
 
     setTarget(pos) {
+        if (!pos) return;
         this.target.gridX = pos.gridX;
         this.target.gridY = pos.gridY;
     }
@@ -34,7 +34,7 @@ export default class Unit extends Entity {
     isAtTarget() {
         const arriveEps = 2;
         return Math.abs(this.targetXpx - this.x) <= arriveEps &&
-            Math.abs(this.targetYpx - this.y) <= arriveEps;
+                Math.abs(this.targetYpx - this.y) <= arriveEps;
     }
 
     moveTowardsTarget(dt) {
@@ -52,16 +52,10 @@ export default class Unit extends Entity {
     handleArrival() {
         this.x = this.targetXpx;
         this.y = this.targetYpx;
-        this.gridX = this.target.gridX;
-        this.gridY = this.target.gridY;
 
         if (this.state === "toTile") {
             this.state = "idle";
         }
-    }
-
-    arrivedAtTile() {
-        this.state = "idle";
     }
 
     onClick() {

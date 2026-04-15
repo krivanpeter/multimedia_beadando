@@ -1,7 +1,6 @@
 import Background from './Background.js';
 import Player from './Player.js';
 import Resource from './Resource.js';
-import Unit from './Units/Unit.js';
 import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, ACTION_POINTS, PLAYERS, RESOURCES } from './initSettings.js';
 
 export default class GameScene {
@@ -46,44 +45,13 @@ export default class GameScene {
         const rect = this.canvas.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
+        const gridPos = this.getGridPos(mouseX, mouseY);
 
-        const clickedUnit = this.currentPlayer.entities.find(entity =>
-            entity instanceof Unit && entity.contains(mouseX, mouseY)
-        );
+        const clickedEntity =
+            this.players.flatMap(p => p.entities).find(en => en.contains(mouseX, mouseY)) ||
+            this.resources.find(res => res.contains(mouseX, mouseY));
 
-        if (clickedUnit) {
-            this.selectUnit(clickedUnit);
-            return;
-        }
-
-        if (this.selectedUnit && this.selectedUnit.state === "idle") {
-            this.issueCommand(mouseX, mouseY);
-        }
-    }
-
-    selectUnit(unit) {
-        if (this.selectedUnit) {
-            this.selectedUnit.isHighlighted = false;
-        }
-
-        if (this.selectedUnit === unit) {
-            this.selectedUnit = null;
-        } else {
-            this.selectedUnit = unit;
-            this.selectedUnit.onClick();
-        }
-    }
-
-    issueCommand(mouseX, mouseY) {
-        const clickedResource = this.resources.find(res => res.contains(mouseX, mouseY));
-
-        if (clickedResource) {
-            this.selectedUnit.setTarget("res", clickedResource);
-        } else {
-            this.selectedUnit.setTarget("pos", this.getGridPos(mouseX, mouseY));
-        }
-        this.selectedUnit.isHighlighted = false;
-        this.selectedUnit = null;
+        this.currentPlayer.handleInteraction(clickedEntity, gridPos);
     }
 
     update(dt) {

@@ -5,14 +5,15 @@ export default class Entity extends EventEmitter {
     constructor(id, x, y, assetKey, playerId) {
         super();
         this.id = id;
-        this.gridX = x;
-        this.gridY = y;
         this.x = x * TILE_SIZE;
         this.y = y * TILE_SIZE;
         this.asset = ASSETS_MAP[assetKey];
         this.playerId = playerId;
         this.isHighlighted = false;
     }
+
+    get gridX() { return Math.round(this.x / TILE_SIZE); }
+    get gridY() { return Math.round(this.y / TILE_SIZE); }
 
     draw(ctx, spriteSheet) {
         if (!this.asset || !ctx || !spriteSheet) return;
@@ -38,7 +39,7 @@ export default class Entity extends EventEmitter {
         );
     }
 
-    onClick(){
-        
+    onClick() {
+
     }
 }

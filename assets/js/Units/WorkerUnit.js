@@ -51,8 +51,8 @@ export default class WorkerUnit extends Unit {
     }
 
     arrivedAtResource() {
-        this.target.gridX = Math.round(this.base.x / TILE_SIZE);
-        this.target.gridY = Math.round(this.base.y / TILE_SIZE);
+        this.target.gridX = this.base.gridX;
+        this.target.gridY = this.base.gridY;
         this.state = "toBase";
         console.log("Erőforrás begyűjtve, irány a bázis!");
     }
@@ -64,6 +64,7 @@ export default class WorkerUnit extends Unit {
         });
         this.target.gridX = this.startX;
         this.target.gridY = this.startY;
+        
         this.state = "toStart";
         console.log("Leadva, irány vissza a startra!");
     }

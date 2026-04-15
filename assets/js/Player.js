@@ -1,4 +1,6 @@
 import Base from './Buildings/Base.js';
+import Resource from './Resource.js';
+import Unit from './Units/Unit.js';
 import WorkerUnit from './Units/WorkerUnit.js';
 import { ACTION_POINTS } from './initSettings.js';
 
@@ -30,6 +32,35 @@ export default class Player {
         this.resources[type] += amount;
         let newVal = parseInt($("#" + type + this.number).text()) + parseInt(amount);
         $("#" + type + this.number).text(newVal);
+    }
+
+    handleInteraction(target, gridPos) {
+        if (target instanceof Unit && target.playerId === this.number) {
+            this.selectUnit(target);
+        } else if (this.selectedUnit && this.selectedUnit.state === "idle") {
+            this.issueCommand(target, gridPos);
+        }
+    }
+
+    selectUnit(unit) {
+        if (this.selectedUnit) this.selectedUnit.isHighlighted = false;
+
+        if (this.selectedUnit === unit) {
+            this.selectedUnit = null;
+        } else {
+            this.selectedUnit = unit;
+            this.selectedUnit.onClick();
+        }
+    }
+
+    issueCommand(target, gridPos) {
+        if (target instanceof Resource) {
+            this.selectedUnit.setTarget("res", target);
+        } else {
+            this.selectedUnit.setTarget("pos", gridPos);
+        }
+        this.selectedUnit.isHighlighted = false;
+        this.selectedUnit = null;
     }
 
     draw(ctx, spriteSheet) {
