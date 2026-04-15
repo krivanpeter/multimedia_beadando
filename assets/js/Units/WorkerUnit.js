@@ -45,7 +45,6 @@ export default class WorkerUnit extends Unit {
                 break;
             case "toStart":
                 this.state = "idle";
-                console.log("Munkás visszaért a kezdőpontra.");
                 break;
         }
     }
@@ -54,7 +53,6 @@ export default class WorkerUnit extends Unit {
         this.target.gridX = this.base.gridX;
         this.target.gridY = this.base.gridY;
         this.state = "toBase";
-        console.log("Erőforrás begyűjtve, irány a bázis!");
     }
 
     arrivedAtBase() {
@@ -66,7 +64,6 @@ export default class WorkerUnit extends Unit {
         this.target.gridY = this.startY;
 
         this.state = "toStart";
-        console.log("Leadva, irány vissza a startra!");
     }
 
     getResourceAmount() {

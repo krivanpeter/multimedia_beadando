@@ -2,14 +2,14 @@ import Building from './Building.js';
 import { TILE_SIZE, BASE_HP } from '../initSettings.js';
 
 export default class Base extends Building {
-    constructor(id, gridX, gridY, playerId) {
+    constructor(id, gridX, gridY, playerColor) {
         const assetKey = "BASE";
-        super(id, gridX, gridY, assetKey, playerId, BASE_HP);
+        super(id, gridX, gridY, assetKey, playerColor, BASE_HP);
     }
 
     draw(ctx, spriteSheet) {
         super.draw(ctx, spriteSheet);
-        ctx.fillStyle = (this.playerId === 1) ? "blue" : "green";
+        ctx.fillStyle = this.playerColor;
         ctx.fillRect(this.gridX * TILE_SIZE, this.gridY * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE / 4);
     }
 }

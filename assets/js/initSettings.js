@@ -19,16 +19,16 @@ export const TANK_HP = 45;
 export const TANK_AD = 15;
 
 export const PLAYERS = [
-    { name:"Peti", id: 1, x: 2, y: 6 },
-    { name:"A vesztes", id: 2, x: 22, y: 6 },
+    { name: "Peti", id: 1, color: "blue", x: 2, y: 6 },
+    { name: "A vesztes", id: 2, color: "green", x: 22, y: 6 },
 ];
 
 export const RESOURCES = [
-    { id: "rr1", x: 5, y: 8, type: "rock" },
-    { id: "rr2", x: 6, y: 5, type: "rock" },
-    { id: "rr3", x: 4, y: 3, type: "rock" },
-    { id: "ri1", x: 8, y: 9, type: "iron" },
-    { id: "ri2", x: 3, y: 10, type: "iron" },
+    { id: "rr1", x: 6, y: 8, type: "rock" },
+    { id: "rr2", x: 7, y: 5, type: "rock" },
+    { id: "rr3", x: 5, y: 3, type: "rock" },
+    { id: "ri1", x: 9, y: 9, type: "iron" },
+    { id: "ri2", x: 4, y: 10, type: "iron" },
     { id: "ru1", x: 12, y: 6, type: "uranium" },
     { id: "rr4", x: 18, y: 8, type: "rock" },
     { id: "rr5", x: 17, y: 5, type: "rock" },

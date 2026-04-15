@@ -1,7 +1,7 @@
 import Background from './Background.js';
 import Player from './Player.js';
 import Resource from './Resource.js';
-import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, RESOURCES } from './initSettings.js';
+import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES } from './initSettings.js';
 
 export default class GameScene {
     constructor(canvasId, spriteSheetSrc) {
@@ -34,16 +34,17 @@ export default class GameScene {
     init() {
         this.map = new Background(WORLD_MAP, TILE_SIZE, RES_W, RES_H);
 
-        PLAYERS.forEach(p => this.players.push(new Player(p.name, p.id, p.x, p.y)));
+        PLAYERS.forEach(p => this.players.push(new Player(p.name, p.id, p.color, p.x, p.y)));
         RESOURCES.forEach(res => this.resources.push(new Resource(res.id, res.x, res.y, res.type)));
         this.currentPlayer = this.players[0];
         $("#currentPlayer").text(this.currentPlayer.name);
-        $("#currentPlayer").css("color", "blue");
+        $("#currentPlayer").css("color", this.currentPlayer.color);
     }
 
     setupInputs() {
-        this.canvas.addEventListener("mousedown", (e) => this.handleMouseDown(e));
-        this.canvas.addEventListener("mousemove", (e) => this.handleMouseMove(e));
+        $("#canvas").on("mousedown", (e) => this.handleMouseDown(e));
+        $("#canvas").on("mousemove", (e) => this.handleMouseMove(e));
+        $("#endTurn").on("click", () => this.endTurn());
     }
 
     handleMouseDown(e) {
@@ -149,5 +150,26 @@ export default class GameScene {
         const gridY = Math.floor(mouseY / TILE_SIZE);
 
         return { gridX, gridY };
+    }
+
+    endTurn() {
+        this.currentPlayer.ap = ACTION_POINTS;
+        if (this.currentPlayer.selectedUnit) {
+            this.currentPlayer.selectedUnit.isHighlighted = false;
+            this.currentPlayer.selectedUnit = null;
+        }
+        this.currentPath = [];
+        this.pathDistance = 0;
+        this.hoveredGrid = null;
+
+        this.currentPlayer = (this.currentPlayer.id == 1) ? this.players[1] : this.players[0];
+
+        this.updateUI();
+    }
+
+    updateUI() {
+        $("#currentPlayer").text(this.currentPlayer.name);
+        $("#currentPlayer").css("color", this.currentPlayer.color);
+        this.currentPlayer.updateAp();
     }
 }

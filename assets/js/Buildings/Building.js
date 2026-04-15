@@ -1,9 +1,9 @@
 import Entity from '../Entity.js';
 
 export default class Building extends Entity {
-    constructor(id, gridX, gridY, assetKey, playerId, hp) {
+    constructor(id, gridX, gridY, assetKey, playerColor, hp) {
         super(id, gridX, gridY, assetKey);
-        this.playerId = playerId;
+        this.playerColor = playerColor;
         this.hp = hp;
     }
 }
