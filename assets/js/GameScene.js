@@ -41,10 +41,14 @@ export default class GameScene {
         PLAYERS.forEach(p => this.players.push(new Player(p.name, p.id, p.color, p.x, p.y)));
         RESOURCES.forEach(res => this.resources.push(new Resource(res.id, res.x, res.y, res.type)));
         this.currentPlayer = this.players[0];
-
+        this.initEmitListeners();
         $("#currentPlayer").text(this.currentPlayer.name);
         $("#currentPlayer").css("color", this.currentPlayer.color);
 
+        this.saveState();
+    }
+
+    initEmitListeners() {
         this.players.forEach(player => {
             player.on('updateAp', () => {
                 this.updateApUI();
@@ -53,8 +57,6 @@ export default class GameScene {
                 this.updateResUI(res);
             });
         });
-
-        this.saveState();
     }
 
     setupInputs() {
@@ -76,23 +78,25 @@ export default class GameScene {
 
         this.currentPlayer = (this.currentPlayer.id == 1) ? this.players[1] : this.players[0];
 
+        this.saveState();
         this.updateRoundUI();
     }
 
     saveState() {
+        this.savedState.players = [];
         this.savedState.currentPlayerId = this.currentPlayer.id;
-        this.players.forEach(player => {
-            this.savedState.players.push(player.clone());
-        });
+        this.players.map(player => this.savedState.players.push(player.clone()));
         console.log("SAVE DONE");
     }
-    
+
     loadState() {
-        this.players = this.savedState.players;
+        this.players = this.savedState.players.map(p => p.clone());
         this.currentPlayer = this.players.find(e => e.id == this.savedState.currentPlayerId);
+        this.initEmitListeners();
         this.updateApUI();
         this.updateResUI(this.currentPlayer.resources);
         this.updateRoundUI();
+        console.log("LOAD DONE");
     }
 
     handleMouseDown(e) {

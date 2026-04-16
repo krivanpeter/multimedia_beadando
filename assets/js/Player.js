@@ -25,9 +25,7 @@ export default class Player extends EventEmitter {
         let workerX = (this.id === 1) ? x + 1 : x - 1;
         let worker = new WorkerUnit(`wu${this.id}`, workerX, y, this.id, this.base);
 
-        worker.on('delivery', (data) => {
-            this.addResource(data.type, data.amount);
-        });
+        this.initEmitListeners(worker);
 
         this.entities.push(worker);
     }
@@ -91,13 +89,26 @@ export default class Player extends EventEmitter {
         });
     }
 
+    initEmitListeners(worker, player=this) {
+        worker.on('delivery', (data) => {
+            player.addResource(data.type, data.amount);
+        });
+    }
+
     clone() {
         let player = new Player(this.name, this.id, this.color, this.base.gridX, this.base.gridY);
-        player.base = this.base;
-        player.resources = JSON.parse(JSON.stringify(this.resources));
+        player.ap = this.ap;
+        player.resources = structuredClone(this.resources);
+
         player.entities = [];
+
         this.entities.forEach(entity => {
-            player.entities.push(entity.clone());
+            let clonedEntity = entity.clone();
+            if (clonedEntity.hasOwnProperty('base')) {
+                clonedEntity.base = player.base;
+            }
+            if (clonedEntity instanceof WorkerUnit) this.initEmitListeners(clonedEntity, player);
+            player.entities.push(clonedEntity);
         });
 
         return player;

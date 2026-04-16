@@ -3,8 +3,7 @@ import { TILE_SIZE, BASE_HP } from '../initSettings.js';
 
 export default class Base extends Building {
     constructor(id, gridX, gridY, playerColor) {
-        const assetKey = "BASE";
-        super(id, gridX, gridY, assetKey, playerColor, BASE_HP);
+        super(id, gridX, gridY, "BASE", playerColor, BASE_HP);
     }
 
     draw(ctx, spriteSheet) {

@@ -1,5 +1,6 @@
 "use strict";
 
+const GAME_SPEED = 5;
 export const RES_W = 1600;
 export const RES_H = 832;
 
@@ -7,14 +8,14 @@ export const ACTION_POINTS = 10;
 
 export const BASE_HP = 100;
 
-export const WORKER_SPEED = 2;
+export const WORKER_SPEED = 2 * GAME_SPEED;
 export const WORKER_HP = 30;
 
 export const ROCK_MINING_AMOUNT = 10;
 export const IRON_MINING_AMOUNT = 5;
 export const URANIUM_MINING_AMOUNT = 1;
 
-export const TANK_SPEED = 5;
+export const TANK_SPEED = 5 * GAME_SPEED;
 export const TANK_HP = 45;
 export const TANK_AD = 15;
 

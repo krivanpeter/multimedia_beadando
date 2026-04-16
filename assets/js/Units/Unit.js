@@ -65,6 +65,10 @@ export default class Unit extends Entity {
         }
     }
 
+    clone() {
+
+    }
+
     get targetXpx() { return this.target.gridX * TILE_SIZE; }
     get targetYpx() { return this.target.gridY * TILE_SIZE; }
 }
