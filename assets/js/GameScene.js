@@ -1,7 +1,9 @@
 import Background from './Background.js';
+import Entity from './Entity.js';
 import Player from './Player.js';
 import Resource from './Resource.js';
 import Unit from './Units/Unit.js';
+import WorkerUnit from './Units/WorkerUnit.js';
 import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES } from './initSettings.js';
 
 export default class GameScene {
@@ -21,6 +23,8 @@ export default class GameScene {
         this.hoveredGrid = null;
         this.currentPath = [];
         this.pathDistance = 0;
+
+        this.savedState = { players: [], currentPlayerId: null };
     }
 
     start(callback) {
@@ -40,12 +44,55 @@ export default class GameScene {
 
         $("#currentPlayer").text(this.currentPlayer.name);
         $("#currentPlayer").css("color", this.currentPlayer.color);
+
+        this.players.forEach(player => {
+            player.on('updateAp', () => {
+                this.updateApUI();
+            });
+            player.on('updateRes', (res) => {
+                this.updateResUI(res);
+            });
+        });
+
+        this.saveState();
     }
 
     setupInputs() {
         $("#canvas").on("mousedown", (e) => this.handleMouseDown(e));
         $("#canvas").on("mousemove", (e) => this.handleMouseMove(e));
-        $("#endTurn").on("click", () => this.endTurn());
+        $("#endTurnBtn").on("click", () => this.endTurn());
+        $("#resetBtn").on("click", () => this.loadState());
+    }
+
+    endTurn() {
+        this.currentPlayer.ap = ACTION_POINTS;
+        if (this.currentPlayer.selectedUnit) {
+            this.currentPlayer.selectedUnit.isHighlighted = false;
+            this.currentPlayer.selectedUnit = null;
+        }
+        this.currentPath = [];
+        this.pathDistance = 0;
+        this.hoveredGrid = null;
+
+        this.currentPlayer = (this.currentPlayer.id == 1) ? this.players[1] : this.players[0];
+
+        this.updateRoundUI();
+    }
+
+    saveState() {
+        this.savedState.currentPlayerId = this.currentPlayer.id;
+        this.players.forEach(player => {
+            this.savedState.players.push(player.clone());
+        });
+        console.log("SAVE DONE");
+    }
+    
+    loadState() {
+        this.players = this.savedState.players;
+        this.currentPlayer = this.players.find(e => e.id == this.savedState.currentPlayerId);
+        this.updateApUI();
+        this.updateResUI(this.currentPlayer.resources);
+        this.updateRoundUI();
     }
 
     handleMouseDown(e) {
@@ -109,7 +156,8 @@ export default class GameScene {
         const isMoving = this.currentPlayer.entities.some(e =>
             e instanceof Unit && e.state !== "idle"
         );
-        $("#endTurn").prop('disabled', isMoving);
+        $("#endTurnBtn").prop('disabled', isMoving);
+        $("#resetBtn").prop('disabled', isMoving);
     }
 
     render() {
@@ -161,21 +209,6 @@ export default class GameScene {
         return { gridX, gridY };
     }
 
-    endTurn() {
-        this.currentPlayer.ap = ACTION_POINTS;
-        if (this.currentPlayer.selectedUnit) {
-            this.currentPlayer.selectedUnit.isHighlighted = false;
-            this.currentPlayer.selectedUnit = null;
-        }
-        this.currentPath = [];
-        this.pathDistance = 0;
-        this.hoveredGrid = null;
-
-        this.currentPlayer = (this.currentPlayer.id == 1) ? this.players[1] : this.players[0];
-
-        this.updateUI();
-    }
-
     isValidGridPos(gridX, gridY) {
         const mapWidth = WORLD_MAP[0].length;
         const mapHeight = WORLD_MAP.length;
@@ -184,10 +217,22 @@ export default class GameScene {
             gridY > 0 && gridY < mapHeight - 1;
     }
 
-    updateUI() {
-        this.currentPlayer.updateAp();
+    updateApUI() {
+        $("#ap").text(this.currentPlayer.ap);
+    }
+
+    updateResUI(res) {
+        const entries = Object.entries(res);
+        for (let i = 0; i < entries.length; i++) {
+            $("#" + entries[i][0] + this.currentPlayer.id).text(entries[i][1]);
+        }
+    }
+
+    updateRoundUI() {
         $("#currentPlayer").text(this.currentPlayer.name);
         $("#currentPlayer").css("color", this.currentPlayer.color);
         $("#currentPlayer").fadeOut(100).fadeIn(100);
+
+        this.updateApUI();
     }
 }

@@ -10,6 +10,8 @@ export default class Unit extends Entity {
         this.target = { gridX: gridX, gridY: gridY };
         this.state = "idle";
         this.clickable = true;
+        this.maxHp = maxHp;
+        this.currentHp = maxHp;
     }
 
     get targetXpx() { return this.target.gridX * TILE_SIZE; }

@@ -73,4 +73,10 @@ export default class WorkerUnit extends Unit {
             default: return 0;
         }
     }
+
+    clone() {
+        let newWorker = new WorkerUnit(this.id, this.gridX, this.gridY, this.playerId, this.base);
+        newWorker.currentHp = this.currentHp;
+        return newWorker
+    }
 }

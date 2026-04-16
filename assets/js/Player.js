@@ -1,14 +1,17 @@
 import Base from './Buildings/Base.js';
+import EventEmitter from './EventEmitter.js';
 import Resource from './Resource.js';
 import Unit from './Units/Unit.js';
 import WorkerUnit from './Units/WorkerUnit.js';
 import { ACTION_POINTS } from './initSettings.js';
 
-export default class Player {
+export default class Player extends EventEmitter {
     constructor(name, id, color, baseX, baseY) {
+        super();
         this.name = name;
         this.id = id;
         this.color = color;
+        this.base = null;
         this.entities = [];
         this.resources = { rock: 0, iron: 0, uranium: 0 }
         this.selectedUnit = null;
@@ -18,7 +21,6 @@ export default class Player {
 
     init(x, y) {
         this.base = new Base(`b${this.id}`, x, y, this.color);
-        this.entities.push(this.base);
 
         let workerX = (this.id === 1) ? x + 1 : x - 1;
         let worker = new WorkerUnit(`wu${this.id}`, workerX, y, this.id, this.base);
@@ -32,8 +34,7 @@ export default class Player {
 
     addResource(type, amount) {
         this.resources[type] += amount;
-        let newVal = parseInt($("#" + type + this.id).text()) + parseInt(amount);
-        $("#" + type + this.id).text(newVal);
+        this.emit("updateRes", this.resources);
     }
 
     handleInteraction(target, gridPos) {
@@ -72,6 +73,7 @@ export default class Player {
         this.selectedUnit.isHighlighted = false;
         this.selectedUnit = null;
         this.updateAp(apCost);
+        this.emit("updateAp", {});
     }
 
     updateAp(ap = null) {
@@ -80,12 +82,24 @@ export default class Player {
         } else {
             this.ap -= ap;
         }
-        $("#ap").text(this.ap);
     }
 
     draw(ctx, spriteSheet) {
+        this.base.draw(ctx, spriteSheet);
         this.entities.forEach(entity => {
             entity.draw(ctx, spriteSheet);
         });
+    }
+
+    clone() {
+        let player = new Player(this.name, this.id, this.color, this.base.gridX, this.base.gridY);
+        player.base = this.base;
+        player.resources = JSON.parse(JSON.stringify(this.resources));
+        player.entities = [];
+        this.entities.forEach(entity => {
+            player.entities.push(entity.clone());
+        });
+
+        return player;
     }
 }
