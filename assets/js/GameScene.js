@@ -60,10 +60,8 @@ export default class GameScene {
             this.players.flatMap(p => p.entities).find(en => en.contains(mouseX, mouseY)) ||
             this.resources.find(res => res.contains(mouseX, mouseY));
 
-        if (this.currentPlayer.ap >= this.pathDistance) {
-            this.currentPlayer.handleInteraction(clickedEntity, gridPos, this.pathDistance);
-            this.isThereMovement = true;
-        }
+        this.currentPlayer.handleInteraction(clickedEntity, gridPos);
+
         this.currentPath = [];
         this.pathDistance = 0;
     }

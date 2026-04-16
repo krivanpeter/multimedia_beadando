@@ -36,11 +36,18 @@ export default class Player {
         $("#" + type + this.id).text(newVal);
     }
 
-    handleInteraction(target, gridPos, ap) {
+    handleInteraction(target, gridPos) {
         if (target instanceof Unit && target.playerId === this.id) {
             this.selectUnit(target);
         } else if (this.selectedUnit && this.selectedUnit.state === "idle") {
-            this.issueCommand(target, gridPos, ap);
+            const dist = Math.abs(gridPos.gridX - this.selectedUnit.gridX) +
+                Math.abs(gridPos.gridY - this.selectedUnit.gridY);
+
+            if (dist > 0 && this.ap >= dist) {
+                this.issueCommand(target, gridPos, dist);
+            } else if (dist > 0) {
+                console.log("Nincs elég Action Point!");
+            }
         }
     }
 
@@ -55,20 +62,24 @@ export default class Player {
         }
     }
 
-    issueCommand(target, gridPos, ap) {
+    issueCommand(target, gridPos, apCost) {
         if (target instanceof Resource) {
             this.selectedUnit.setTarget("res", target);
         } else {
             this.selectedUnit.setTarget("pos", gridPos);
         }
+
         this.selectedUnit.isHighlighted = false;
         this.selectedUnit = null;
-        this.updateAp(ap);
+        this.updateAp(apCost);
     }
 
     updateAp(ap = null) {
-        if (ap == null) this.ap = ACTION_POINTS;
-        this.ap -= ap;
+        if (ap === null) {
+            this.ap = ACTION_POINTS;
+        } else {
+            this.ap -= ap;
+        }
         $("#ap").text(this.ap);
     }
 
