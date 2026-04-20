@@ -4,7 +4,7 @@ import Player from './Player.js';
 import Resource from './Resource.js';
 import Unit from './Units/Unit.js';
 import WorkerUnit from './Units/WorkerUnit.js';
-import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES } from './initSettings.js';
+import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES, TANK_COST, TRUCK_COST } from './initSettings.js';
 
 export default class GameScene {
     constructor(canvasId, spriteSheetSrc) {
@@ -36,16 +36,24 @@ export default class GameScene {
     }
 
     init() {
-        this.map = new Background(WORLD_MAP, TILE_SIZE, RES_W, RES_H);
+        this.initGame();
+        this.initGUI();
+        this.saveState();
+    }
 
+    initGame() {
+        this.map = new Background(WORLD_MAP, TILE_SIZE, RES_W, RES_H);
         PLAYERS.forEach(p => this.players.push(new Player(p.name, p.id, p.color, p.x, p.y)));
         RESOURCES.forEach(res => this.resources.push(new Resource(res.id, res.x, res.y, res.type)));
         this.currentPlayer = this.players[0];
         this.initEmitListeners();
+    }
+
+    initGUI() {
         $("#currentPlayer").text(this.currentPlayer.name);
         $("#currentPlayer").css("color", this.currentPlayer.color);
-
-        this.saveState();
+        $('[data-type="tank"] .cost').text(`${TANK_COST.unit} ${TANK_COST.type}`);
+        $('[data-type="truck"] .cost').text(`${TRUCK_COST.unit} ${TRUCK_COST.type}`);
     }
 
     initEmitListeners() {
@@ -64,6 +72,7 @@ export default class GameScene {
         $("#canvas").on("mousemove", (e) => this.handleMouseMove(e));
         $("#endTurnBtn").on("click", () => this.endTurn());
         $("#resetBtn").on("click", () => this.loadState());
+        $(".build-item").on("click", (e) => this.handleBuilding(e));
     }
 
     endTurn() {
@@ -107,9 +116,11 @@ export default class GameScene {
 
         if (!this.isValidGridPos(gridPos.gridX, gridPos.gridY)) return;
 
-        const clickedEntity =
-            this.players.flatMap(p => p.entities).find(en => en.contains(mouseX, mouseY)) ||
-            this.resources.find(res => res.contains(mouseX, mouseY));
+        const allUnits = this.players.flatMap(p => p.entities);
+        const allBases = this.players.map(p => p.base);
+        const allClickables = [...allUnits, ...allBases, ...this.resources];
+
+        const clickedEntity = allClickables.find(obj => obj && obj.contains(mouseX, mouseY));
 
         this.currentPlayer.handleInteraction(clickedEntity, gridPos);
 
@@ -149,6 +160,16 @@ export default class GameScene {
             this.pathDistance = Math.abs(endX - startX) + Math.abs(endY - startY);
         } else {
             this.pathDistance = 0;
+        }
+    }
+
+    handleBuilding(e) {
+        const pId = $(e.currentTarget).data("player");
+        const type = $(e.currentTarget).data("type");
+        if (pId == this.currentPlayer.id) {
+            console.log(pId, type);
+            // nyersanyag ellenőrzés és levonás
+            // egység létrehozása
         }
     }
 

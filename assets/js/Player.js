@@ -20,13 +20,12 @@ export default class Player extends EventEmitter {
     }
 
     init(x, y) {
-        this.base = new Base(`b${this.id}`, x, y, this.color);
+        this.base = new Base(`b${this.id}`, x, y, this.color, this.id);
 
         let workerX = (this.id === 1) ? x + 1 : x - 1;
         let worker = new WorkerUnit(`wu${this.id}`, workerX, y, this.id, this.base);
 
         this.initEmitListeners(worker);
-
         this.entities.push(worker);
     }
 
@@ -89,7 +88,7 @@ export default class Player extends EventEmitter {
         });
     }
 
-    initEmitListeners(worker, player=this) {
+    initEmitListeners(worker, player = this) {
         worker.on('delivery', (data) => {
             player.addResource(data.type, data.amount);
         });

@@ -9,7 +9,7 @@ img {
     margin: 0 10px;
 }
 
-.amount{
+.amount {
     width: 25px;
 }
 
@@ -30,10 +30,6 @@ img {
     box-sizing: border-box;
 }
 
-/* .game_round {
-
-} */
-
 .player_resources {
     display: flex;
     align-items: center;
@@ -41,4 +37,40 @@ img {
 
 #p2gui {
     justify-content: flex-end;
+}
+
+.build-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px;
+    color: white;
+}
+
+.player_build_menu {
+    width: 45%;
+    border: 1px solid #444;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.build-items {
+    display: flex;
+    gap: 15px;
+}
+
+.build-item {
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.1s;
+    border: 1px solid transparent;
+}
+
+.build-item:hover {
+    transform: scale(1.1);
+    border: 1px solid #2bfacd;
+}
+
+.cost {
+    display: block;
 }

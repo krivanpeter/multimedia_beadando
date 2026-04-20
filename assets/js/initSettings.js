@@ -18,6 +18,11 @@ export const URANIUM_MINING_AMOUNT = 1;
 export const TANK_SPEED = 5 * GAME_SPEED;
 export const TANK_HP = 45;
 export const TANK_AD = 15;
+export const TANK_COST = {"type": "Rock", "unit":15};
+
+export const TRUCK_SPEED = 3.5 * GAME_SPEED;
+export const TRUCK_HP = 35;
+export const TRUCK_COST = {"type": "Rock", "unit":20};
 
 export const PLAYERS = [
     { name: "Peti", id: 1, color: "blue", x: 2, y: 6 },
