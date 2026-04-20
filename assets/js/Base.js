@@ -1,9 +1,11 @@
-import Building from './Building.js';
-import { TILE_SIZE, BASE_HP } from '../initSettings.js';
+import Entity from './Entity.js';
+import { TILE_SIZE, BASE_HP } from './initSettings.js';
 
-export default class Base extends Building {
+export default class Base extends Entity {
     constructor(id, gridX, gridY, playerColor) {
-        super(id, gridX, gridY, "BASE", playerColor, BASE_HP);
+        super(id, gridX, gridY, "BASE");
+        this.playerColor = playerColor;
+        this.hp = BASE_HP;
     }
 
     draw(ctx, spriteSheet) {

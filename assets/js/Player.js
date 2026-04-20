@@ -1,4 +1,4 @@
-import Base from './Buildings/Base.js';
+import Base from './Base.js';
 import EventEmitter from './EventEmitter.js';
 import Resource from './Resource.js';
 import Unit from './Units/Unit.js';
