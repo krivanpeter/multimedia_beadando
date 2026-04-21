@@ -2,6 +2,7 @@ import Unit from './Unit.js';
 import {
     WORKER_HP,
     WORKER_SPEED,
+    COST,
     ROCK_MINING_AMOUNT,
     IRON_MINING_AMOUNT,
     URANIUM_MINING_AMOUNT,
@@ -10,7 +11,7 @@ import {
 export default class WorkerUnit extends Unit {
     constructor(id, gridX, gridY, playerId, base) {
         const assetKey = (playerId === 1) ? "WORKER_BLUE" : "WORKER_GREEN";
-        super(id, gridX, gridY, assetKey, playerId, WORKER_HP, WORKER_SPEED);
+        super(id, gridX, gridY, assetKey, playerId, WORKER_HP, WORKER_SPEED, COST.WORKER);
 
         this.base = base;
         this.startX = gridX;
@@ -75,8 +76,10 @@ export default class WorkerUnit extends Unit {
     }
 
     clone() {
-        let newWorker = new WorkerUnit(this.id, this.gridX, this.gridY, this.playerId, this.base);
+        let newWorker = new WorkerUnit(this.id, this.startX, this.startY, this.playerId, this.base);
         newWorker.currentHp = this.currentHp;
+        newWorker.x = this.x;
+        newWorker.y = this.y;
         return newWorker
     }
 }

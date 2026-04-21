@@ -21,12 +21,15 @@ export default class Player extends EventEmitter {
 
     init(x, y) {
         this.base = new Base(`b${this.id}`, x, y, this.color, this.id);
+        this.createWorkerUnit(x, y);
+    }
 
+    createWorkerUnit(x, y) {
         let workerX = (this.id === 1) ? x + 1 : x - 1;
         let worker = new WorkerUnit(`wu${this.id}`, workerX, y, this.id, this.base);
-
         this.initEmitListeners(worker);
         this.entities.push(worker);
+        return worker
     }
 
     addResource(type, amount) {
@@ -37,7 +40,10 @@ export default class Player extends EventEmitter {
     handleInteraction(target, gridPos) {
         if (target instanceof Unit && target.playerId === this.id) {
             this.selectUnit(target);
-        } else if (this.selectedUnit && this.selectedUnit.state === "idle") {
+        } else if (target instanceof Unit && target.playerId !== this.id) {
+            return;
+        }
+        else if (this.selectedUnit && this.selectedUnit.state === "idle") {
             const dist = Math.abs(gridPos.gridX - this.selectedUnit.gridX) +
                 Math.abs(gridPos.gridY - this.selectedUnit.gridY);
 
@@ -70,7 +76,6 @@ export default class Player extends EventEmitter {
         this.selectedUnit.isHighlighted = false;
         this.selectedUnit = null;
         this.updateAp(apCost);
-        this.emit("updateAp", {});
     }
 
     updateAp(ap = null) {
@@ -79,6 +84,7 @@ export default class Player extends EventEmitter {
         } else {
             this.ap -= ap;
         }
+        this.emit("updateAp", {});
     }
 
     draw(ctx, spriteSheet) {
@@ -92,6 +98,11 @@ export default class Player extends EventEmitter {
         worker.on('delivery', (data) => {
             player.addResource(data.type, data.amount);
         });
+    }
+
+    removeResource(resType, resUnits) {
+        this.resources[resType] -= resUnits;
+        this.emit("updateRes", this.resources);
     }
 
     clone() {

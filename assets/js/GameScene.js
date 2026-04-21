@@ -4,7 +4,7 @@ import Player from './Player.js';
 import Resource from './Resource.js';
 import Unit from './Units/Unit.js';
 import WorkerUnit from './Units/WorkerUnit.js';
-import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES, TANK_COST, TRUCK_COST } from './initSettings.js';
+import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES, COST } from './initSettings.js';
 
 export default class GameScene {
     constructor(canvasId, spriteSheetSrc) {
@@ -52,8 +52,9 @@ export default class GameScene {
     initGUI() {
         $("#currentPlayer").text(this.currentPlayer.name);
         $("#currentPlayer").css("color", this.currentPlayer.color);
-        $('[data-type="tank"] .cost').text(`${TANK_COST.unit} ${TANK_COST.type}`);
-        $('[data-type="truck"] .cost').text(`${TRUCK_COST.unit} ${TRUCK_COST.type}`);
+        $('[data-type="worker"] .cost').text(`${COST.WORKER.unit} ${COST.WORKER.type}`);
+        $('[data-type="truck"] .cost').text(`${COST.TRUCK.unit} ${COST.TRUCK.type}`);
+        $('[data-type="tank"] .cost').text(`${COST.TANK.unit} ${COST.TANK.type}`);
     }
 
     initEmitListeners() {
@@ -95,7 +96,6 @@ export default class GameScene {
         this.savedState.players = [];
         this.savedState.currentPlayerId = this.currentPlayer.id;
         this.players.map(player => this.savedState.players.push(player.clone()));
-        console.log("SAVE DONE");
     }
 
     loadState() {
@@ -105,7 +105,6 @@ export default class GameScene {
         this.updateApUI();
         this.updateResUI(this.currentPlayer.resources);
         this.updateRoundUI();
-        console.log("LOAD DONE");
     }
 
     handleMouseDown(e) {
@@ -138,8 +137,14 @@ export default class GameScene {
         this.currentPath = [];
 
         const selected = this.currentPlayer.selectedUnit;
+        const unitAtTarget = this.isUnitAt(gridPos.gridX, gridPos.gridY);
 
         if (selected && selected.state === "idle" && this.isValidGridPos(gridPos.gridX, gridPos.gridY)) {
+            if (unitAtTarget) {
+                this.pathDistance = 0;
+                return;
+            }
+
             const startX = selected.gridX;
             const startY = selected.gridY;
             const endX = gridPos.gridX;
@@ -164,12 +169,28 @@ export default class GameScene {
     }
 
     handleBuilding(e) {
-        const pId = $(e.currentTarget).data("player");
-        const type = $(e.currentTarget).data("type");
-        if (pId == this.currentPlayer.id) {
-            console.log(pId, type);
-            // nyersanyag ellenőrzés és levonás
-            // egység létrehozása
+        if ($(e.currentTarget).data("player") !== this.currentPlayer.id) {
+            return;
+        }
+        if (this.currentPlayer.ap <= 0 && true) {
+            return;
+        }
+
+        const selectedType = $(e.currentTarget).data("type");
+        const resType = COST[selectedType.toUpperCase()].type.toLowerCase();
+        const resUnits = COST[selectedType.toUpperCase()].unit;
+
+        if (this.currentPlayer.resources[resType] >= resUnits) {
+            this.currentPlayer.removeResource(resType, resUnits);
+            this.currentPlayer.updateAp(1);
+            this.getNewUnitType(selectedType);
+        }
+    }
+
+    getNewUnitType(selectedType) {
+        switch (selectedType) {
+            case "worker":
+                return this.currentPlayer.createWorkerUnit(this.currentPlayer.base.gridX, this.currentPlayer.base.gridY);
         }
     }
 
@@ -218,6 +239,11 @@ export default class GameScene {
             }
             this.ctx.restore();
         }
+    }
+
+    isUnitAt(gridX, gridY) {
+        const allUnits = this.players.flatMap(p => p.entities);
+        return allUnits.some(unit => unit.gridX === gridX && unit.gridY === gridY);
     }
 
     getFillStyleForAp() {
