@@ -28,10 +28,14 @@ export default class Unit extends Entity {
         }
     }
 
-    setTarget(pos) {
-        if (!pos) return;
-        this.target.gridX = pos.gridX;
-        this.target.gridY = pos.gridY;
+    setTarget(type, pos) {
+        const targetPos = pos ? pos : type;
+        if (!targetPos) return;
+
+        this.target.gridX = targetPos.gridX;
+        this.target.gridY = targetPos.gridY;
+
+        this.state = "toTile";
     }
 
     isAtTarget() {
@@ -69,7 +73,4 @@ export default class Unit extends Entity {
     clone() {
 
     }
-
-    get targetXpx() { return this.target.gridX * TILE_SIZE; }
-    get targetYpx() { return this.target.gridY * TILE_SIZE; }
 }

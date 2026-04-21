@@ -1,5 +1,5 @@
 "use strict";
-export const GAME_SPEED = 5;
+export const GAME_SPEED = 50;
 
 export const CHEAT_ON = true;
 

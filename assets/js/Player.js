@@ -34,7 +34,7 @@ export default class Player extends EventEmitter {
     }
 
     createTruck(x, y) {
-        const truck = new Truck(`t${this.id}`, x, y + 1, this.id, this.base);
+        const truck = new Truck(`t${this.id}`, x, y - 1, this.id, this.base);
         this.initEmitListeners(truck);
         this.entities.push(truck);
     }

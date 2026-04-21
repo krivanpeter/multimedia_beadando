@@ -5,7 +5,7 @@ export default class WorkerUnit extends Unit {
     constructor(id, gridX, gridY, playerId, base, type = "WORKER") {
         const color = (playerId === 1) ? "BLUE" : "GREEN";
         const dynamicAssetKey = `${UNIT_DATA[type].ASSET}_${color}`;
-        super(id, gridX, gridY, dynamicAssetKey, playerId, UNIT_DATA[type].hp, UNIT_DATA[type].speed, UNIT_DATA[type].COST);
+        super(id, gridX, gridY, dynamicAssetKey, playerId, UNIT_DATA[type].hp, UNIT_DATA[type].COST);
         this.type = type;
         this.base = base;
         this.startX = gridX;
@@ -62,6 +62,8 @@ export default class WorkerUnit extends Unit {
     clone() {
         let newWorker = new WorkerUnit(this.id, this.startX, this.startY, this.playerId, this.base);
         newWorker.currentHp = this.currentHp;
+        newWorker.type = this.type;
+        newWorker.asset = this.asset;
         newWorker.x = this.x;
         newWorker.y = this.y;
         return newWorker
