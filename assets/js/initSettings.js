@@ -6,7 +6,7 @@ export const CHEAT_ON = true;
 export const RES_W = 1600;
 export const RES_H = 832;
 
-export const ACTION_POINTS = 10;
+export const ACTION_POINTS = 100;
 
 export const BASE_HP = 100;
 
