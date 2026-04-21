@@ -5,7 +5,7 @@ export default class WorkerUnit extends Unit {
     constructor(id, gridX, gridY, playerId, base, type = "WORKER") {
         const color = (playerId === 1) ? "BLUE" : "GREEN";
         const dynamicAssetKey = `${UNIT_DATA[type].ASSET}_${color}`;
-        super(id, gridX, gridY, dynamicAssetKey, playerId, UNIT_DATA[type].hp, UNIT_DATA[type].COST);
+        super(id, gridX, gridY, dynamicAssetKey, playerId, UNIT_DATA[type].hp, UNIT_DATA[type].COST, UNIT_DATA[type].SOUNDS);
         this.type = type;
         this.base = base;
         this.startX = gridX;
@@ -28,7 +28,6 @@ export default class WorkerUnit extends Unit {
     handleArrival() {
         const prevState = this.state;
         super.handleArrival();
-
         switch (prevState) {
             case "toResource":
                 this.arrivedAtResource();
@@ -60,9 +59,8 @@ export default class WorkerUnit extends Unit {
     }
 
     clone() {
-        let newWorker = new WorkerUnit(this.id, this.startX, this.startY, this.playerId, this.base);
+        let newWorker = new this.constructor(this.id, this.startX, this.startY, this.playerId, this.base);
         newWorker.currentHp = this.currentHp;
-        newWorker.type = this.type;
         newWorker.asset = this.asset;
         newWorker.x = this.x;
         newWorker.y = this.y;

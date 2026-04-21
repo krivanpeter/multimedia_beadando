@@ -4,7 +4,7 @@ import { UNIT_DATA } from '../initSettings.js';
 export default class Tank extends Unit {
     constructor(id, x, y, playerId) {
         const assetKey = (playerId === 1) ? "TANK_BLUE" : "TANK_GREEN";
-        super(id, x, y, assetKey, playerId, UNIT_DATA.TANK.HP, UNIT_DATA.TANK.COST);
+        super(id, x, y, assetKey, playerId, UNIT_DATA.TANK.HP, UNIT_DATA.TANK.COST, UNIT_DATA.TANK.SOUNDS);
 
         this.attackDamage = UNIT_DATA.TANK.DAMAGE;
     }

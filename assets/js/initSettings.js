@@ -1,5 +1,5 @@
 "use strict";
-export const GAME_SPEED = 50;
+export const GAME_SPEED = 3;
 
 export const CHEAT_ON = true;
 
@@ -14,14 +14,25 @@ export const UNIT_DATA = {
     WORKER: {
         HP: 30, ASSET: "WORKER", MINING_AMOUNT: {
             rock: 10, iron: 5, uranium: 1
-        }, COST: { "type": "Rock", "unit": 5 }
+        }, COST: { "type": "Rock", "unit": 5 },
+        SOUNDS: {
+            move: "./assets/sounds/wu_move.wav"
+        }
     },
     TRUCK: {
         HP: 35, ASSET: "TRUCK", MINING_AMOUNT: {
             rock: 15, iron: 7, uranium: 2
-        }, COST: { "type": "Rock", "unit": 20 }
+        }, COST: { "type": "Rock", "unit": 20 },
+        SOUNDS: {
+            move: "./assets/sounds/truck_move.wav"
+        }
     },
-    TANK: { HP: 45, ASSET: "TANK", DAMAGE: 15, COST: { "type": "Iron", "unit": 15 } }
+    TANK: {
+        HP: 45, ASSET: "TANK", DAMAGE: 15, COST: { "type": "Iron", "unit": 15 },
+        SOUNDS: {
+            move: "./assets/sounds/tank_move.wav"
+        }
+    }
 };
 
 export const PLAYERS = [

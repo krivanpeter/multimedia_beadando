@@ -5,7 +5,7 @@ import {
 } from '../initSettings.js';
 
 export default class Unit extends Entity {
-    constructor(id, gridX, gridY, assetKey, playerId, maxHp, cost) {
+    constructor(id, gridX, gridY, assetKey, playerId, maxHp, cost, sounds) {
         super(id, gridX, gridY, assetKey, playerId);
         this.cost = cost;
         this.target = { gridX: gridX, gridY: gridY };
@@ -13,13 +13,22 @@ export default class Unit extends Entity {
         this.clickable = true;
         this.maxHp = maxHp;
         this.currentHp = maxHp;
+
+        this.moveSound = new Audio(sounds.move);
+        this.moveSound.loop = true;
+        this.moveSound.volume = 1;
     }
 
     get targetXpx() { return this.target.gridX * TILE_SIZE; }
     get targetYpx() { return this.target.gridY * TILE_SIZE; }
 
     update(dt) {
-        if (this.state === "idle") return;
+        if (this.state === "idle") {
+            this.stopMoveSound();
+            return
+        };
+        
+        this.playMoveSound();
 
         if (this.isAtTarget()) {
             this.handleArrival();
@@ -58,10 +67,7 @@ export default class Unit extends Entity {
     handleArrival() {
         this.x = this.targetXpx;
         this.y = this.targetYpx;
-
-        if (this.state === "toTile") {
-            this.state = "idle";
-        }
+        this.state = "idle";
     }
 
     onClick() {
@@ -70,7 +76,15 @@ export default class Unit extends Entity {
         }
     }
 
-    clone() {
-
+    playMoveSound() {
+        if (this.moveSound.paused) {
+            this.moveSound.play();
+        }
     }
+
+    stopMoveSound() {
+        this.moveSound.pause();
+        this.moveSound.currentTime = 0;
+    }
+
 }
