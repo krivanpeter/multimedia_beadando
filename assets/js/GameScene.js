@@ -4,7 +4,7 @@ import Player from './Player.js';
 import Resource from './Resource.js';
 import Unit from './Units/Unit.js';
 import WorkerUnit from './Units/WorkerUnit.js';
-import { WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES, COST } from './initSettings.js';
+import { CHEAT_ON, WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES, UNIT_DATA } from './initSettings.js';
 
 export default class GameScene {
     constructor(canvasId, spriteSheetSrc) {
@@ -52,9 +52,9 @@ export default class GameScene {
     initGUI() {
         $("#currentPlayer").text(this.currentPlayer.name);
         $("#currentPlayer").css("color", this.currentPlayer.color);
-        $('[data-type="worker"] .cost').text(`${COST.WORKER.unit} ${COST.WORKER.type}`);
-        $('[data-type="truck"] .cost').text(`${COST.TRUCK.unit} ${COST.TRUCK.type}`);
-        $('[data-type="tank"] .cost').text(`${COST.TANK.unit} ${COST.TANK.type}`);
+        $('[data-type="worker"] .cost').text(`${UNIT_DATA.WORKER.COST.unit} ${UNIT_DATA.WORKER.COST.type}`);
+        $('[data-type="truck"] .cost').text(`${UNIT_DATA.TRUCK.COST.unit} ${UNIT_DATA.TRUCK.COST.type}`);
+        $('[data-type="tank"] .cost').text(`${UNIT_DATA.TANK.COST.unit} ${UNIT_DATA.TANK.COST.type}`);
     }
 
     initEmitListeners() {
@@ -169,18 +169,21 @@ export default class GameScene {
     }
 
     handleBuilding(e) {
-        if ($(e.currentTarget).data("player") !== this.currentPlayer.id) {
-            return;
-        }
-        if (this.currentPlayer.ap <= 0 && true) {
-            return;
+        if (!CHEAT_ON) {
+            if ($(e.currentTarget).data("player") !== this.currentPlayer.id) {
+                return;
+            }
+            if (this.currentPlayer.ap <= 0 && true) {
+                return;
+            }
         }
 
         const selectedType = $(e.currentTarget).data("type");
-        const resType = COST[selectedType.toUpperCase()].type.toLowerCase();
-        const resUnits = COST[selectedType.toUpperCase()].unit;
 
-        if (this.currentPlayer.resources[resType] >= resUnits) {
+        const resType = UNIT_DATA[selectedType.toUpperCase()].COST.type.toLowerCase();
+        const resUnits = UNIT_DATA[selectedType.toUpperCase()].COST.unit;
+
+        if (CHEAT_ON || this.currentPlayer.resources[resType] >= resUnits) {
             this.currentPlayer.removeResource(resType, resUnits);
             this.currentPlayer.updateAp(1);
             this.getNewUnitType(selectedType);
@@ -191,6 +194,10 @@ export default class GameScene {
         switch (selectedType) {
             case "worker":
                 return this.currentPlayer.createWorkerUnit(this.currentPlayer.base.gridX, this.currentPlayer.base.gridY);
+            case "truck":
+                return this.currentPlayer.createTruck(this.currentPlayer.base.gridX, this.currentPlayer.base.gridY);
+            case "tank":
+                return this.currentPlayer.createTank(this.currentPlayer.base.gridX, this.currentPlayer.base.gridY);
         }
     }
 

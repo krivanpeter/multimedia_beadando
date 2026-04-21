@@ -3,10 +3,12 @@ import EventEmitter from './EventEmitter.js';
 import Resource from './Resource.js';
 import Unit from './Units/Unit.js';
 import WorkerUnit from './Units/WorkerUnit.js';
+import Truck from './Units/Truck.js';
+import Tank from './Units/Tank.js';
 import { ACTION_POINTS } from './initSettings.js';
 
 export default class Player extends EventEmitter {
-    constructor(name, id, color, baseX, baseY) {
+    constructor(name, id, color, baseX, baseY, resources) {
         super();
         this.name = name;
         this.id = id;
@@ -25,11 +27,22 @@ export default class Player extends EventEmitter {
     }
 
     createWorkerUnit(x, y) {
-        let workerX = (this.id === 1) ? x + 1 : x - 1;
-        let worker = new WorkerUnit(`wu${this.id}`, workerX, y, this.id, this.base);
+        const workerX = (this.id === 1) ? x + 1 : x - 1;
+        const worker = new WorkerUnit(`wu${this.id}`, workerX, y, this.id, this.base);
         this.initEmitListeners(worker);
         this.entities.push(worker);
-        return worker
+    }
+
+    createTruck(x, y) {
+        const truck = new Truck(`t${this.id}`, x, y + 1, this.id, this.base);
+        this.initEmitListeners(truck);
+        this.entities.push(truck);
+    }
+
+    createTank(x, y) {
+        const tank = new Tank(`t${this.id}`, x, y + 1, this.id, this.base);
+        this.initEmitListeners(tank);
+        this.entities.push(tank);
     }
 
     addResource(type, amount) {

@@ -1,22 +1,15 @@
 import Unit from './Unit.js';
-import {
-    WORKER_HP,
-    WORKER_SPEED,
-    COST,
-    ROCK_MINING_AMOUNT,
-    IRON_MINING_AMOUNT,
-    URANIUM_MINING_AMOUNT,
-} from '../initSettings.js';
+import { UNIT_DATA } from '../initSettings.js';
 
 export default class WorkerUnit extends Unit {
-    constructor(id, gridX, gridY, playerId, base) {
-        const assetKey = (playerId === 1) ? "WORKER_BLUE" : "WORKER_GREEN";
-        super(id, gridX, gridY, assetKey, playerId, WORKER_HP, WORKER_SPEED, COST.WORKER);
-
+    constructor(id, gridX, gridY, playerId, base, type = "WORKER") {
+        const color = (playerId === 1) ? "BLUE" : "GREEN";
+        const dynamicAssetKey = `${UNIT_DATA[type].ASSET}_${color}`;
+        super(id, gridX, gridY, dynamicAssetKey, playerId, UNIT_DATA[type].hp, UNIT_DATA[type].speed, UNIT_DATA[type].COST);
+        this.type = type;
         this.base = base;
         this.startX = gridX;
         this.startY = gridY;
-
         this.resource = { gridX: null, gridY: null, type: null };
     }
 
@@ -58,21 +51,12 @@ export default class WorkerUnit extends Unit {
     arrivedAtBase() {
         this.emit("delivery", {
             type: this.resource.type,
-            amount: this.getResourceAmount()
+            amount: UNIT_DATA[this.type].MINING_AMOUNT[this.resource.type]
         });
         this.target.gridX = this.startX;
         this.target.gridY = this.startY;
 
         this.state = "toStart";
-    }
-
-    getResourceAmount() {
-        switch (this.resource.type) {
-            case "rock": return ROCK_MINING_AMOUNT;
-            case "iron": return IRON_MINING_AMOUNT;
-            case "uranium": return URANIUM_MINING_AMOUNT;
-            default: return 0;
-        }
     }
 
     clone() {

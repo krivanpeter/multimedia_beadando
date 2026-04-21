@@ -1,6 +1,8 @@
 "use strict";
+export const GAME_SPEED = 5;
 
-const GAME_SPEED = 5;
+export const CHEAT_ON = true;
+
 export const RES_W = 1600;
 export const RES_H = 832;
 
@@ -8,24 +10,18 @@ export const ACTION_POINTS = 10;
 
 export const BASE_HP = 100;
 
-export const WORKER_SPEED = 2 * GAME_SPEED;
-export const WORKER_HP = 30;
-
-export const ROCK_MINING_AMOUNT = 10;
-export const IRON_MINING_AMOUNT = 5;
-export const URANIUM_MINING_AMOUNT = 1;
-
-export const TANK_SPEED = 5 * GAME_SPEED;
-export const TANK_HP = 45;
-export const TANK_AD = 15;
-
-export const TRUCK_SPEED = 3.5 * GAME_SPEED;
-export const TRUCK_HP = 35;
-
-export const COST = {
-    TRUCK : { "type": "Rock", "unit": 20 },
-    TANK : { "type": "Iron", "unit": 15 },
-    WORKER : { "type": "Rock", "unit": 5 }
+export const UNIT_DATA = {
+    WORKER: {
+        HP: 30, ASSET: "WORKER", MINING_AMOUNT: {
+            rock: 10, iron: 5, uranium: 1
+        }, COST: { "type": "Rock", "unit": 5 }
+    },
+    TRUCK: {
+        HP: 35, ASSET: "TRUCK", MINING_AMOUNT: {
+            rock: 15, iron: 7, uranium: 2
+        }, COST: { "type": "Rock", "unit": 20 }
+    },
+    TANK: { HP: 45, ASSET: "TANK", DAMAGE: 15, COST: { "type": "Iron", "unit": 15 } }
 };
 
 export const PLAYERS = [
@@ -64,6 +60,9 @@ export const ASSETS_MAP = {
 
     WORKER_BLUE: { x: 8 * TILE_SIZE, y: 3 * TILE_SIZE, w: TILE_SIZE, h: TILE_SIZE },
     WORKER_GREEN: { x: 8 * TILE_SIZE, y: 5 * TILE_SIZE, w: TILE_SIZE, h: TILE_SIZE },
+
+    TRUCK_BLUE: { x: 13 * TILE_SIZE, y: 3 * TILE_SIZE, w: TILE_SIZE, h: TILE_SIZE },
+    TRUCK_GREEN: { x: 13 * TILE_SIZE, y: 5 * TILE_SIZE, w: TILE_SIZE, h: TILE_SIZE },
 
     TANK_BLUE: { x: 15 * TILE_SIZE, y: 3 * TILE_SIZE, w: TILE_SIZE, h: TILE_SIZE },
     TANK_GREEN: { x: 15 * TILE_SIZE, y: 5 * TILE_SIZE, w: TILE_SIZE, h: TILE_SIZE },

@@ -1,13 +1,13 @@
 import Entity from '../Entity.js';
 import {
-    TILE_SIZE
+    TILE_SIZE,
+    GAME_SPEED
 } from '../initSettings.js';
 
 export default class Unit extends Entity {
-    constructor(id, gridX, gridY, assetKey, playerId, maxHp, speed, cost) {
+    constructor(id, gridX, gridY, assetKey, playerId, maxHp, cost) {
         super(id, gridX, gridY, assetKey, playerId);
         this.cost = cost;
-        this.speed = speed;
         this.target = { gridX: gridX, gridY: gridY };
         this.state = "idle";
         this.clickable = true;
@@ -40,7 +40,7 @@ export default class Unit extends Entity {
     }
 
     moveTowardsTarget(dt) {
-        const moveStep = this.speed * dt * 100;
+        const moveStep = GAME_SPEED * dt * 100;
         const dx = this.targetXpx - this.x;
         const dy = this.targetYpx - this.y;
 

@@ -7,7 +7,6 @@ export default class Entity extends EventEmitter {
         this.id = id;
         this.x = x * TILE_SIZE;
         this.y = y * TILE_SIZE;
-        this.assetKey = assetKey;
         this.asset = ASSETS_MAP[assetKey];
         this.playerId = playerId;
         this.isHighlighted = false;
