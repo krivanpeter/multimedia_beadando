@@ -74,3 +74,35 @@ img {
 .cost {
     display: block;
 }
+
+.build-error {
+    animation: flash-red 0.5s ease-in-out, shake 0.3s ease-in-out;
+}
+
+@keyframes flash-red {
+    0% {
+        border-color: red;
+        box-shadow: 0 0 10px red;
+    }
+
+    100% {
+        border-color: transparent;
+        box-shadow: none;
+    }
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    75% {
+        transform: translateX(4px);
+    }
+}

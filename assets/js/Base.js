@@ -19,8 +19,4 @@ export default class Base extends Entity {
     clone() {
         return new Base(this.gridX, this.gridY, this.playerColor);
     }
-
-    onClick(){
-        console.log("THE BASE IS CLICKED!");
-    }
 }

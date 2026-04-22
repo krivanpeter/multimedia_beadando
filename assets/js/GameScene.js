@@ -71,7 +71,7 @@ export default class GameScene {
         $("#canvas").on("mousemove", (e) => this.handleMouseMove(e));
         $("#endTurnBtn").on("click", () => this.endTurn());
         $("#resetBtn").on("click", () => this.loadState());
-        $(".build-item").on("click", (e) => this.handleBuilding(e));
+        $(".build-item").on("click", (e) => this.handleBuilding($(e.currentTarget)));
     }
 
     endTurn() {
@@ -166,8 +166,8 @@ export default class GameScene {
         }
     }
 
-    handleBuilding(e) {
-        if ($(e.currentTarget).data("player") !== this.currentPlayer.id) {
+    handleBuilding(target) {
+        if (target.data("player") !== this.currentPlayer.id) {
             return;
         }
         if (!CHEAT_ON) {
@@ -176,15 +176,22 @@ export default class GameScene {
             }
         }
 
-        const selectedType = $(e.currentTarget).data("type");
+        const selectedType = target.data("type");
 
         const resType = UNIT_DATA[selectedType.toUpperCase()].COST.type.toLowerCase();
         const resUnits = UNIT_DATA[selectedType.toUpperCase()].COST.unit;
 
         if (CHEAT_ON || this.currentPlayer.resources[resType] >= resUnits) {
+            const result = this.getNewUnitType(selectedType);
+            if (!result) {
+                target.addClass("build-error");
+                setTimeout(() => {
+                    target.removeClass("build-error");
+                }, 500);
+                return;
+            }
             this.currentPlayer.removeResource(resType, resUnits);
             this.currentPlayer.updateAp(1);
-            this.getNewUnitType(selectedType);
         }
     }
 

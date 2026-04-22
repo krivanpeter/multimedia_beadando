@@ -39,16 +39,15 @@ export default class Player extends EventEmitter {
 
     createWorkerUnit(x, y) {
         const offset = (this.id === 1) ? 1 : -1;
-        console.log(offset);
-        this.createUnit(WorkerUnit, x + offset, y);
+        return this.createUnit(WorkerUnit, x + offset, y);
     }
 
     createTruck(x, y) {
-        this.createUnit(Truck, x, y - 1);
+        return this.createUnit(Truck, x, y - 1);
     }
 
     createTank(x, y) {
-        this.createUnit(Tank, x, y + 1);
+        return this.createUnit(Tank, x, y + 1);
     }
 
     isTileOccupied(gridX, gridY) {
@@ -72,8 +71,6 @@ export default class Player extends EventEmitter {
 
             if (dist > 0 && this.ap >= dist) {
                 this.issueCommand(target, gridPos, dist);
-            } else if (dist > 0) {
-                console.log("Nincs elég Action Point!");
             }
         }
     }
