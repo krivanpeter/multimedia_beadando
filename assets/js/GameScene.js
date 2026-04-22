@@ -42,7 +42,7 @@ export default class GameScene {
     initGame() {
         this.map = new Background(WORLD_MAP, TILE_SIZE, RES_W, RES_H);
         PLAYERS.forEach(p => this.players.push(new Player(p.name, p.id, p.color, p.x, p.y)));
-        RESOURCES.forEach(res => this.resources.push(new Resource(res.id, res.x, res.y, res.type)));
+        RESOURCES.forEach(res => this.resources.push(new Resource(res.x, res.y, res.type)));
         this.currentPlayer = this.players[0];
         this.initEmitListeners();
     }

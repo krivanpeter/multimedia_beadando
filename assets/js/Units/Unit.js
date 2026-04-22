@@ -6,8 +6,8 @@ import {
 } from '../initSettings.js';
 
 export default class Unit extends Entity {
-    constructor(id, gridX, gridY, assetKey, playerId, maxHp, cost, sounds) {
-        super(id, gridX, gridY, assetKey, playerId);
+    constructor(gridX, gridY, assetKey, playerId, maxHp, cost, sounds) {
+        super(gridX, gridY, assetKey, playerId);
         this.cost = cost;
         this.target = { gridX: gridX, gridY: gridY };
         this.state = "idle";

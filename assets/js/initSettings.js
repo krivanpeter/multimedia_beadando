@@ -9,9 +9,9 @@ export const RES_H = 832;
 export const TILE_SIZE = 64;
 
 export const HEALTH = {
-    Y_OFFSET:5,
-    WIDTH:TILE_SIZE - 5,
-    HEIGHT:16
+    Y_OFFSET: 5,
+    WIDTH: TILE_SIZE - 5,
+    HEIGHT: 16
 };
 
 export const ACTION_POINTS = 100;
@@ -49,17 +49,17 @@ export const PLAYERS = [
 ];
 
 export const RESOURCES = [
-    { id: "rr1", x: 6, y: 8, type: "rock" },
-    { id: "rr2", x: 7, y: 5, type: "rock" },
-    { id: "rr3", x: 5, y: 3, type: "rock" },
-    { id: "ri1", x: 9, y: 9, type: "iron" },
-    { id: "ri2", x: 4, y: 10, type: "iron" },
-    { id: "ru1", x: 12, y: 6, type: "uranium" },
-    { id: "rr4", x: 18, y: 8, type: "rock" },
-    { id: "rr5", x: 17, y: 5, type: "rock" },
-    { id: "rr6", x: 19, y: 3, type: "rock" },
-    { id: "ri3", x: 15, y: 9, type: "iron" },
-    { id: "ri4", x: 20, y: 10, type: "iron" },
+    { x: 6, y: 8, type: "rock" },
+    { x: 7, y: 5, type: "rock" },
+    { x: 5, y: 3, type: "rock" },
+    { x: 9, y: 9, type: "iron" },
+    { x: 4, y: 10, type: "iron" },
+    { x: 12, y: 6, type: "uranium" },
+    { x: 18, y: 8, type: "rock" },
+    { x: 17, y: 5, type: "rock" },
+    { x: 19, y: 3, type: "rock" },
+    { x: 15, y: 9, type: "iron" },
+    { x: 20, y: 10, type: "iron" },
 ];
 
 export const ASSETS_MAP = {

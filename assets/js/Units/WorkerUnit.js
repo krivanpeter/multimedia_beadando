@@ -2,10 +2,10 @@ import Unit from './Unit.js';
 import { GAME_SPEED, UNIT_DATA } from '../initSettings.js';
 
 export default class WorkerUnit extends Unit {
-    constructor(id, gridX, gridY, playerId, base, type = "WORKER") {
+    constructor(gridX, gridY, playerId, base, type = "WORKER") {
         const color = (playerId === 1) ? "BLUE" : "GREEN";
         const dynamicAssetKey = `${UNIT_DATA[type].ASSET}_${color}`;
-        super(id, gridX, gridY, dynamicAssetKey, playerId, UNIT_DATA[type].HP, UNIT_DATA[type].COST, UNIT_DATA[type].SOUNDS);
+        super(gridX, gridY, dynamicAssetKey, playerId, UNIT_DATA[type].HP, UNIT_DATA[type].COST, UNIT_DATA[type].SOUNDS);
         this.type = type;
         this.base = base;
         this.startX = gridX;
@@ -75,7 +75,7 @@ export default class WorkerUnit extends Unit {
     }
 
     clone() {
-        let clone = new this.constructor(this.id, this.startX, this.startY, this.playerId, this.base);
+        let clone = new this.constructor(this.startX, this.startY, this.playerId, this.base);
         clone.maxHp = this.maxHp;
         clone.currentHp = this.currentHp;
         clone.asset = this.asset;

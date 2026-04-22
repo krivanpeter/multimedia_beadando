@@ -2,9 +2,8 @@ import EventEmitter from './EventEmitter.js';
 import { TILE_SIZE, ASSETS_MAP } from './initSettings.js';
 
 export default class Entity extends EventEmitter {
-    constructor(id, x, y, assetKey, playerId) {
+    constructor(x, y, assetKey, playerId) {
         super();
-        this.id = id;
         this.x = x * TILE_SIZE;
         this.y = y * TILE_SIZE;
         this.asset = ASSETS_MAP[assetKey];
@@ -20,9 +19,7 @@ export default class Entity extends EventEmitter {
     get gridY() { return Math.round(this.y / TILE_SIZE); }
 
     draw(ctx, spriteSheet) {
-        if (!this.asset || !ctx || !spriteSheet) return;
-
-        
+        if (!this.asset || !ctx || !spriteSheet) return;  
 
         const cx = this.x + TILE_SIZE / 2;
         const cy = this.y + TILE_SIZE / 2;

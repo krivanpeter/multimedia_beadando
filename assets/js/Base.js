@@ -3,8 +3,8 @@ import Health from './Health.js';
 import { TILE_SIZE, BASE_HP } from './initSettings.js';
 
 export default class Base extends Entity {
-    constructor(id, gridX, gridY, playerColor, playerId) {
-        super(id, gridX, gridY, "BASE", playerId);
+    constructor(gridX, gridY, playerColor, playerId) {
+        super(gridX, gridY, "BASE", playerId);
         this.playerColor = playerColor;
         this.health = new Health(BASE_HP);
     }
@@ -17,7 +17,7 @@ export default class Base extends Entity {
     }
 
     clone() {
-        return new Base(this.id, this.gridX, this.gridY, this.playerColor);
+        return new Base(this.gridX, this.gridY, this.playerColor);
     }
 
     onClick(){

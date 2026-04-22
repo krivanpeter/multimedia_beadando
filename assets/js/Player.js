@@ -22,25 +22,34 @@ export default class Player extends EventEmitter {
     }
 
     init(x, y) {
-        this.base = new Base(`b${this.id}`, x, y, this.color, this.id);
+        this.base = new Base(x, y, this.color, this.id);
         this.createWorkerUnit(x, y);
+    }
+
+    createUnit(Class, prefix, gridX, gridY){
+/*         if (this.isTileOccupied(gridX, gridY)) {
+            console.warn(`Nem lehet ide spawnolni: ${gridX}, ${gridY}`);
+            return null;
+        } */
+       const id = `${prefix}_${this.id}_${Date.now()}`;
+
     }
 
     createWorkerUnit(x, y) {
         const workerX = (this.id === 1) ? x + 1 : x - 1;
-        const worker = new WorkerUnit(`wu${this.id}`, workerX, y, this.id, this.base);
+        const worker = new WorkerUnit(workerX, y, this.id, this.base);
         this.initEmitListeners(worker);
         this.entities.push(worker);
     }
 
     createTruck(x, y) {
-        const truck = new Truck(`t${this.id}`, x, y - 1, this.id, this.base);
+        const truck = new Truck(x, y - 1, this.id, this.base);
         this.initEmitListeners(truck);
         this.entities.push(truck);
     }
 
     createTank(x, y) {
-        const tank = new Tank(`t${this.id}`, x, y + 1, this.id, this.base);
+        const tank = new Tank(x, y + 1, this.id, this.base);
         this.initEmitListeners(tank);
         this.entities.push(tank);
     }
