@@ -14,6 +14,10 @@ export default class Unit extends Entity {
         this.maxHp = maxHp;
         this.currentHp = maxHp;
 
+        this.facing = (playerId === 1) ? "right" : "left";
+        this.moveDirection = null;
+        this.setFacing();
+
         this.moveSound = new Audio(sounds.move);
         this.moveSound.loop = true;
         this.moveSound.volume = 1;
@@ -27,7 +31,7 @@ export default class Unit extends Entity {
             this.stopMoveSound();
             return
         };
-        
+
         this.playMoveSound();
 
         if (this.isAtTarget()) {
@@ -57,12 +61,45 @@ export default class Unit extends Entity {
         const dx = this.targetXpx - this.x;
         const dy = this.targetYpx - this.y;
 
+        let newMoveDir = null;
+
         if (Math.abs(dx) > 0.1) {
-            this.x += Math.sign(dx) * Math.min(moveStep, Math.abs(dx));
+            const step = Math.sign(dx) * Math.min(moveStep, Math.abs(dx));
+            this.x += step;
+            newMoveDir = step > 0 ? "right" : "left";
+            this.facing = newMoveDir;
         } else if (Math.abs(dy) > 0.1) {
-            this.y += Math.sign(dy) * Math.min(moveStep, Math.abs(dy));
+            const step = Math.sign(dy) * Math.min(moveStep, Math.abs(dy));
+            this.y += step;
+            newMoveDir = step > 0 ? "down" : "up";
+        }
+        if (newMoveDir && newMoveDir !== this.moveDirection) {
+            this.moveDirection = newMoveDir;
+            this.rotate();
         }
     }
+
+    setFacing() {
+        this.flip = (this.facing === "left");
+    }
+
+    rotate() {
+        const facingLeft = this.facing === "left";
+        switch (this.moveDirection) {
+            case "up":
+                this.rotation = (facingLeft ? 90 : 270) * Math.PI / 180;
+                break;
+            case "down":
+                this.rotation = (facingLeft ? 270 : 90) * Math.PI / 180;
+                break;
+            case "left":
+            case "right":
+                this.rotation = 0;
+                break;
+        }
+        this.setFacing();
+    }
+
 
     handleArrival() {
         this.x = this.targetXpx;

@@ -167,10 +167,10 @@ export default class GameScene {
     }
 
     handleBuilding(e) {
+        if ($(e.currentTarget).data("player") !== this.currentPlayer.id) {
+            return;
+        }
         if (!CHEAT_ON) {
-            if ($(e.currentTarget).data("player") !== this.currentPlayer.id) {
-                return;
-            }
             if (this.currentPlayer.ap <= 0 && true) {
                 return;
             }

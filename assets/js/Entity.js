@@ -10,7 +10,10 @@ export default class Entity extends EventEmitter {
         this.asset = ASSETS_MAP[assetKey];
         this.playerId = playerId;
         this.isHighlighted = false;
+
         this.rotation = 0;
+        this.flip = false;
+        this.direction = null;
     }
 
     get gridX() { return Math.round(this.x / TILE_SIZE); }
@@ -24,6 +27,8 @@ export default class Entity extends EventEmitter {
         ctx.save();
         ctx.translate(cx, cy);
         ctx.rotate(this.rotation);
+
+        ctx.scale(this.flip ? -1 : 1, 1)
 
         ctx.drawImage(
             spriteSheet,
@@ -42,16 +47,6 @@ export default class Entity extends EventEmitter {
             mouseX >= this.x && mouseX <= this.x + TILE_SIZE &&
             mouseY >= this.y && mouseY <= this.y + TILE_SIZE
         );
-    }
-
-    turnToDirection(dir) {
-        const map = {
-            up: 0,
-            right: 90,
-            down: 180,
-            left: 270
-        };
-        this.rotation = map[dir] * Math.PI / 180;
     }
 
     onClick() {
