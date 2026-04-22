@@ -1,9 +1,7 @@
 import Background from './Background.js';
-import Entity from './Entity.js';
 import Player from './Player.js';
 import Resource from './Resource.js';
 import Unit from './Units/Unit.js';
-import WorkerUnit from './Units/WorkerUnit.js';
 import { CHEAT_ON, WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES, UNIT_DATA } from './initSettings.js';
 
 export default class GameScene {
