@@ -22,6 +22,8 @@ export default class Entity extends EventEmitter {
     draw(ctx, spriteSheet) {
         if (!this.asset || !ctx || !spriteSheet) return;
 
+        
+
         const cx = this.x + TILE_SIZE / 2;
         const cy = this.y + TILE_SIZE / 2;
         ctx.save();

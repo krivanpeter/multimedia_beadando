@@ -6,6 +6,14 @@ export const CHEAT_ON = true;
 export const RES_W = 1600;
 export const RES_H = 832;
 
+export const TILE_SIZE = 64;
+
+export const HEALTH = {
+    Y_OFFSET:5,
+    WIDTH:TILE_SIZE - 5,
+    HEIGHT:16
+};
+
 export const ACTION_POINTS = 100;
 
 export const BASE_HP = 100;
@@ -53,8 +61,6 @@ export const RESOURCES = [
     { id: "ri3", x: 15, y: 9, type: "iron" },
     { id: "ri4", x: 20, y: 10, type: "iron" },
 ];
-
-export const TILE_SIZE = 64;
 
 export const ASSETS_MAP = {
     DIRT: { x: 0, y: 0, w: TILE_SIZE, h: TILE_SIZE },

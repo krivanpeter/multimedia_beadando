@@ -1,4 +1,5 @@
 import Entity from '../Entity.js';
+import Health from '../Health.js';
 import {
     TILE_SIZE,
     GAME_SPEED
@@ -11,8 +12,7 @@ export default class Unit extends Entity {
         this.target = { gridX: gridX, gridY: gridY };
         this.state = "idle";
         this.clickable = true;
-        this.maxHp = maxHp;
-        this.currentHp = maxHp;
+        this.health = new Health(maxHp);
 
         this.facing = (playerId === 1) ? "right" : "left";
         this.moveDirection = null;
@@ -26,6 +26,11 @@ export default class Unit extends Entity {
     get targetXpx() { return this.target.gridX * TILE_SIZE; }
     get targetYpx() { return this.target.gridY * TILE_SIZE; }
 
+    draw(ctx, spriteSheet) {
+        super.draw(ctx, spriteSheet);
+        this.health.draw(ctx, this.x, this.y);
+    }
+    
     update(dt) {
         if (this.state === "idle") {
             this.stopMoveSound();
