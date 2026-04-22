@@ -123,5 +123,4 @@ export default class Unit extends Entity {
         this.moveSound.pause();
         this.moveSound.currentTime = 0;
     }
-
 }

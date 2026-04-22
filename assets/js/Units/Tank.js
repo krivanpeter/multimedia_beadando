@@ -10,10 +10,17 @@ export default class Tank extends Unit {
     }
 
     clone() {
-        let cloned = new Tank(this.id, this.gridX, this.gridY, this.playerId);
-        cloned.x = this.x;
-        cloned.y = this.y;
-        cloned.currentHp = this.currentHp;
-        return cloned;
+        let clone = new Tank(this.id, this.gridX, this.gridY, this.playerId);
+        clone.maxHp = this.maxHp;
+        clone.currentHp = this.currentHp;
+        clone.asset = this.asset;
+        clone.x = this.x;
+        clone.y = this.y;
+        clone.moveDirection = this.moveDirection
+        clone.facing = this.facing
+        clone.rotation = this.rotation;
+        clone.flip = this.flip;
+        clone.direction = this.direction;
+        return clone;
     }
 }

@@ -42,7 +42,7 @@ export default class WorkerUnit extends Unit {
     }
 
     moveTowardsTarget(dt, type = "wu") {
-        if(type != "wu"){
+        if (type != "wu") {
             super.moveTowardsTarget(dt);
             return;
         }
@@ -75,11 +75,19 @@ export default class WorkerUnit extends Unit {
     }
 
     clone() {
-        let newWorker = new this.constructor(this.id, this.startX, this.startY, this.playerId, this.base);
-        newWorker.currentHp = this.currentHp;
-        newWorker.asset = this.asset;
-        newWorker.x = this.x;
-        newWorker.y = this.y;
-        return newWorker
+        let clone = new this.constructor(this.id, this.startX, this.startY, this.playerId, this.base);
+        clone.maxHp = this.maxHp;
+        clone.currentHp = this.currentHp;
+        clone.asset = this.asset;
+        clone.x = this.x;
+        clone.y = this.y;
+        clone.moveDirection = this.moveDirection
+        clone.facing = this.facing
+
+        clone.rotation = this.rotation;
+        clone.flip = this.flip;
+        clone.direction = this.direction;
+
+        return clone
     }
 }
