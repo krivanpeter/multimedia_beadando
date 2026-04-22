@@ -26,32 +26,33 @@ export default class Player extends EventEmitter {
         this.createWorkerUnit(x, y);
     }
 
-    createUnit(Class, prefix, gridX, gridY){
-/*         if (this.isTileOccupied(gridX, gridY)) {
-            console.warn(`Nem lehet ide spawnolni: ${gridX}, ${gridY}`);
+    createUnit(UnitClass, gridX, gridY) {
+        if (this.isTileOccupied(gridX, gridY)) {
             return null;
-        } */
-       const id = `${prefix}_${this.id}_${Date.now()}`;
+        }
+        const unit = new UnitClass(gridX, gridY, this.id, this.base);
+        this.initEmitListeners(unit);
+        this.entities.push(unit);
 
+        return unit;
     }
 
     createWorkerUnit(x, y) {
-        const workerX = (this.id === 1) ? x + 1 : x - 1;
-        const worker = new WorkerUnit(workerX, y, this.id, this.base);
-        this.initEmitListeners(worker);
-        this.entities.push(worker);
+        const offset = (this.id === 1) ? 1 : -1;
+        console.log(offset);
+        this.createUnit(WorkerUnit, x + offset, y);
     }
 
     createTruck(x, y) {
-        const truck = new Truck(x, y - 1, this.id, this.base);
-        this.initEmitListeners(truck);
-        this.entities.push(truck);
+        this.createUnit(Truck, x, y - 1);
     }
 
     createTank(x, y) {
-        const tank = new Tank(x, y + 1, this.id, this.base);
-        this.initEmitListeners(tank);
-        this.entities.push(tank);
+        this.createUnit(Tank, x, y + 1);
+    }
+
+    isTileOccupied(gridX, gridY) {
+        return this.entities.some(e => e.gridX === gridX && e.gridY === gridY);
     }
 
     addResource(type, amount) {
