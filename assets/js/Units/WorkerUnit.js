@@ -1,5 +1,5 @@
 import Unit from './Unit.js';
-import { UNIT_DATA } from '../initSettings.js';
+import { GAME_SPEED, UNIT_DATA } from '../initSettings.js';
 
 export default class WorkerUnit extends Unit {
     constructor(id, gridX, gridY, playerId, base, type = "WORKER") {
@@ -38,6 +38,22 @@ export default class WorkerUnit extends Unit {
             case "toStart":
                 this.state = "idle";
                 break;
+        }
+    }
+
+    moveTowardsTarget(dt, type = "wu") {
+        if(type != "wu"){
+            super.moveTowardsTarget(dt);
+            return;
+        }
+        const moveStep = GAME_SPEED * dt * 100;
+        const dx = this.targetXpx - this.x;
+        const dy = this.targetYpx - this.y;
+
+        if (Math.abs(dx) > 0.1) {
+            this.x += Math.sign(dx) * Math.min(moveStep, Math.abs(dx));
+        } else if (Math.abs(dy) > 0.1) {
+            this.y += Math.sign(dy) * Math.min(moveStep, Math.abs(dy));
         }
     }
 
