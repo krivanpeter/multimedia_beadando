@@ -53,6 +53,7 @@ export default class GameScene {
         $('[data-type="worker"] .cost').text(`${UNIT_DATA.WORKER.COST.unit} ${UNIT_DATA.WORKER.COST.type}`);
         $('[data-type="truck"] .cost').text(`${UNIT_DATA.TRUCK.COST.unit} ${UNIT_DATA.TRUCK.COST.type}`);
         $('[data-type="tank"] .cost').text(`${UNIT_DATA.TANK.COST.unit} ${UNIT_DATA.TANK.COST.type}`);
+        this.updateBuildMenu();
     }
 
     initEmitListeners() {
@@ -71,7 +72,7 @@ export default class GameScene {
         $("#canvas").on("mousemove", (e) => this.handleMouseMove(e));
         $("#endTurnBtn").on("click", () => this.endTurn());
         $("#resetBtn").on("click", () => this.loadState());
-        $(".build-item").on("click", (e) => this.handleBuilding($(e.currentTarget)));
+        $('.build-items div').on("click", (e) => this.handleBuilding($(e.currentTarget)));
     }
 
     endTurn() {
@@ -296,6 +297,13 @@ export default class GameScene {
         $("#currentPlayer").css("color", this.currentPlayer.color);
         $("#currentPlayer").fadeOut(100).fadeIn(100);
 
+        this.updateBuildMenu();
         this.updateApUI();
+    }
+
+    updateBuildMenu() {
+        const prevPlayerId = (this.currentPlayer.id === 1) ? 2 : 1;
+        $(`.player_build_menu div[data-player="${prevPlayerId}"]`).removeClass("build-item");
+        $(`.player_build_menu div[data-player="${this.currentPlayer.id}"]`).addClass("build-item");
     }
 }

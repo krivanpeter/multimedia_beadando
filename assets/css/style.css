@@ -57,13 +57,13 @@ img {
 .build-items {
     display: flex;
     gap: 15px;
+    text-align: center;
+    border: 1px solid transparent;
 }
 
 .build-item {
     cursor: pointer;
-    text-align: center;
     transition: transform 0.1s;
-    border: 1px solid transparent;
 }
 
 .build-item:hover {
