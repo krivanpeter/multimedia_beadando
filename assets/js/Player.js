@@ -63,7 +63,14 @@ export default class Player extends EventEmitter {
         if (target instanceof Unit && target.playerId === this.id) {
             this.selectUnit(target);
         } else if (target instanceof Unit && target.playerId !== this.id) {
-            return;
+            if (this.selectedUnit instanceof Tank && this.ap > 0) {
+                const dist = Math.abs(target.gridX - this.selectedUnit.gridX) +
+                    Math.abs(target.gridY - this.selectedUnit.gridY);
+                if (dist <= this.selectedUnit.range) {
+                    console.log("bumm");
+                    this.updateAp(1);
+                }
+            }
         }
         else if (this.selectedUnit && this.selectedUnit.state === "idle") {
             const dist = Math.abs(gridPos.gridX - this.selectedUnit.gridX) +

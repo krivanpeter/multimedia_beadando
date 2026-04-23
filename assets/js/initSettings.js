@@ -36,7 +36,7 @@ export const UNIT_DATA = {
         }
     },
     TANK: {
-        HP: 45, ASSET: "TANK", DAMAGE: 15, COST: { "type": "Iron", "unit": 15 },
+        HP: 45, ASSET: "TANK", DAMAGE: 15, RANGE: 5, COST: { "type": "Iron", "unit": 15 },
         SOUNDS: {
             move: "./assets/sounds/tank_move.wav"
         }

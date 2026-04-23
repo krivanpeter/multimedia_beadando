@@ -5,9 +5,11 @@ export default class Tank extends Unit {
     constructor(x, y, playerId) {
         const assetKey = (playerId === 1) ? "TANK_BLUE" : "TANK_GREEN";
         super(x, y, assetKey, playerId, UNIT_DATA.TANK.HP, UNIT_DATA.TANK.COST, UNIT_DATA.TANK.SOUNDS);
-
+        this.range = UNIT_DATA.TANK.RANGE;
         this.attackDamage = UNIT_DATA.TANK.DAMAGE;
     }
+
+        
 
     clone() {
         let clone = new Tank(this.gridX, this.gridY, this.playerId);
