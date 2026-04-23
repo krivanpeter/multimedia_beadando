@@ -67,12 +67,12 @@ export default class Player extends EventEmitter {
                 const dist = Math.abs(target.gridX - this.selectedUnit.gridX) +
                     Math.abs(target.gridY - this.selectedUnit.gridY);
                 if (dist <= this.selectedUnit.range) {
-                    console.log("bumm");
+                    this.selectedUnit.shoot();
                     this.updateAp(1);
                 }
             }
         }
-        else if(target instanceof Base){
+        else if (target instanceof Base) {
             return
         }
         else if (this.selectedUnit && this.selectedUnit.state === "idle") {
@@ -121,6 +121,11 @@ export default class Player extends EventEmitter {
         this.base.draw(ctx, spriteSheet);
         this.entities.forEach(entity => {
             entity.draw(ctx, spriteSheet);
+            if (entity instanceof Tank) {
+                entity.rockets.forEach(rocket => {
+                    rocket.draw(ctx, spriteSheet);
+                });
+            }
         });
     }
 

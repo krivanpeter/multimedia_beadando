@@ -1,28 +1,35 @@
 import Unit from './Unit.js';
 import { UNIT_DATA } from '../initSettings.js';
+import Rocket from '../Rocket.js';
 
 export default class Tank extends Unit {
-    constructor(x, y, playerId) {
+    constructor(gridX, gridY, playerId) {
         const assetKey = (playerId === 1) ? "TANK_BLUE" : "TANK_GREEN";
-        super(x, y, assetKey, playerId, UNIT_DATA.TANK.HP, UNIT_DATA.TANK.COST, UNIT_DATA.TANK.SOUNDS);
+        super(gridX, gridY, assetKey, playerId, UNIT_DATA.TANK.HP, UNIT_DATA.TANK.COST, UNIT_DATA.TANK.SOUNDS);
         this.range = UNIT_DATA.TANK.RANGE;
         this.attackDamage = UNIT_DATA.TANK.DAMAGE;
-    }
+        this.rockets = [];
+    }       
 
-        
+    shoot(){
+        console.log("bumm");
+        let rocket = new Rocket(this.gridX, this.gridY);
+        this.rockets.push(rocket);
+    }
 
     clone() {
         let clone = new Tank(this.gridX, this.gridY, this.playerId);
         clone.maxHp = this.maxHp;
         clone.currentHp = this.currentHp;
         clone.asset = this.asset;
-        clone.x = this.x;
-        clone.y = this.y;
+        clone.gridX = this.gridX;
+        clone.gridY = this.gridY;
         clone.moveDirection = this.moveDirection
         clone.facing = this.facing
         clone.rotation = this.rotation;
         clone.flip = this.flip;
         clone.direction = this.direction;
+        clone.rockets = this.rockets;
         return clone;
     }
 }

@@ -83,6 +83,7 @@ export const ASSETS_MAP = {
 
     TANK_BLUE: { x: 15 * TILE_SIZE, y: 3 * TILE_SIZE, w: TILE_SIZE, h: TILE_SIZE },
     TANK_GREEN: { x: 15 * TILE_SIZE, y: 5 * TILE_SIZE, w: TILE_SIZE, h: TILE_SIZE },
+    ROCKET: { x: 0 * TILE_SIZE, y: 7 * TILE_SIZE, w: TILE_SIZE, h: TILE_SIZE },
 };
 
 export const shortHands = {
