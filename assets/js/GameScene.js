@@ -2,6 +2,7 @@ import Background from './Background.js';
 import Player from './Player.js';
 import Resource from './Resource.js';
 import Unit from './Units/Unit.js';
+import Tank from './Units/Tank.js';
 import { CHEAT_ON, WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES, UNIT_DATA } from './initSettings.js';
 
 export default class GameScene {
@@ -21,6 +22,8 @@ export default class GameScene {
         this.hoveredGrid = null;
         this.currentPath = [];
         this.pathDistance = 0;
+
+        this.canShoot = false;
 
         this.savedState = { players: [], currentPlayerId: null };
     }
@@ -119,7 +122,9 @@ export default class GameScene {
         const allClickables = [...allUnits, ...allBases, ...this.resources];
 
         const clickedEntity = allClickables.find(obj => obj && obj.contains(mouseX, mouseY));
-
+        if (!clickedEntity) {
+            if (this.isTileOccupied(gridPos.gridX, gridPos.gridY)) return;
+        }
         this.currentPlayer.handleInteraction(clickedEntity, gridPos);
 
         this.currentPath = [];
@@ -134,12 +139,27 @@ export default class GameScene {
 
         this.hoveredGrid = gridPos;
         this.currentPath = [];
+        this.canShoot = false;
 
         const selected = this.currentPlayer.selectedUnit;
-        const unitAtTarget = this.isUnitAt(gridPos.gridX, gridPos.gridY);
 
         if (selected && selected.state === "idle" && this.isValidGridPos(gridPos.gridX, gridPos.gridY)) {
-            if (unitAtTarget) {
+            const enemyUnit = this.players
+                .find(p => p.id !== this.currentPlayer.id)
+                .entities.find(e => e.gridX === gridPos.gridX && e.gridY === gridPos.gridY);
+
+            if (selected instanceof Tank && enemyUnit && this.currentPlayer.ap > 0) {
+                const dist = Math.abs(gridPos.gridX - selected.gridX) + Math.abs(gridPos.gridY - selected.gridY);
+                if (dist <= selected.range) {
+                    this.canShoot = true;
+                    this.pathDistance = 0;
+                    return;
+                }
+            }
+
+            const tileOccupied = this.isTileOccupied(gridPos.gridX, gridPos.gridY);
+
+            if (tileOccupied) {
                 this.pathDistance = 0;
                 return;
             }
@@ -228,6 +248,10 @@ export default class GameScene {
     }
 
     renderPath() {
+        if (this.canShoot && this.hoveredGrid) {
+            this.renderShoot();
+        }
+
         if (this.currentPath && this.currentPath.length > 0) {
             this.ctx.save();
             this.ctx.fillStyle = "rgba(43, 250, 205, 0.2)";
@@ -254,9 +278,37 @@ export default class GameScene {
         }
     }
 
-    isUnitAt(gridX, gridY) {
+    renderShoot() {
+        this.ctx.save();
+
+        this.ctx.fillStyle = "rgba(255, 0, 0, 0.4)";
+        this.ctx.fillRect(
+            this.hoveredGrid.gridX * TILE_SIZE,
+            this.hoveredGrid.gridY * TILE_SIZE,
+            TILE_SIZE,
+            TILE_SIZE
+        );
+
+        this.ctx.fillStyle = "white";
+        this.ctx.font = "bold 16px Arial";
+        this.ctx.textAlign = "center";
+        this.ctx.shadowColor = "black";
+        this.ctx.shadowBlur = 4;
+        this.ctx.fillText(
+            "SHOOT",
+            this.hoveredGrid.gridX * TILE_SIZE + TILE_SIZE / 2,
+            this.hoveredGrid.gridY * TILE_SIZE + TILE_SIZE / 1.5
+        );
+        this.ctx.restore();
+        return;
+    }
+
+    isTileOccupied(gridX, gridY) {
+        const allBases = this.players.flatMap(p => p.base);
         const allUnits = this.players.flatMap(p => p.entities);
-        return allUnits.some(unit => unit.gridX === gridX && unit.gridY === gridY);
+        const unitOccupies = allUnits.some(unit => unit.gridX === gridX && unit.gridY === gridY);
+        const buildingOccupies = allBases.some(base => base.gridX === gridX && base.gridY === gridY);
+        return unitOccupies || buildingOccupies;
     }
 
     getFillStyleForAp() {

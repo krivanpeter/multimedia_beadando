@@ -72,6 +72,9 @@ export default class Player extends EventEmitter {
                 }
             }
         }
+        else if(target instanceof Base){
+            return
+        }
         else if (this.selectedUnit && this.selectedUnit.state === "idle") {
             const dist = Math.abs(gridPos.gridX - this.selectedUnit.gridX) +
                 Math.abs(gridPos.gridY - this.selectedUnit.gridY);
