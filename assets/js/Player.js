@@ -8,7 +8,7 @@ import Tank from './Units/Tank.js';
 import { ACTION_POINTS } from './initSettings.js';
 
 export default class Player extends EventEmitter {
-    constructor(name, id, color, baseX, baseY, resources) {
+    constructor(name, id, color, baseX, baseY, isCloning = false) {
         super();
         this.name = name;
         this.id = id;
@@ -18,12 +18,17 @@ export default class Player extends EventEmitter {
         this.resources = { rock: 0, iron: 0, uranium: 0 }
         this.selectedUnit = null;
         this.ap = ACTION_POINTS;
-        this.init(baseX, baseY);
+
+        this.isCloning = isCloning;
+
+        if (!this.isCloning) {
+            this.init(baseX, baseY);
+        }
+        this.initEmitListeners();
     }
 
     init(x, y) {
         this.base = new Base(x, y, this.color, this.id);
-        this.initEmitListeners(this.base);
         this.entities.push(this.base);
         this.createWorkerUnit(x, y);
     }
@@ -33,7 +38,10 @@ export default class Player extends EventEmitter {
             return null;
         }
         const unit = new UnitClass(gridX, gridY, this.id, this.base);
-        this.initEmitListeners(unit);
+        if (!this.isCloning) {
+            this.addEmitListener(unit);
+        }
+
         this.entities.push(unit);
 
         return unit;
@@ -133,10 +141,10 @@ export default class Player extends EventEmitter {
         }
     }
 
-    initEmitListeners(entity, player = this) {
-        if (!entity instanceof Tank && !entity instanceof Base) {
+    addEmitListener(entity) {
+        if (entity instanceof WorkerUnit) {
             entity.on('delivery', (data) => {
-                player.addResource(data.type, data.amount);
+                this.addResource(data.type, data.amount);
             });
         }
         entity.on('died', () => {
@@ -150,27 +158,55 @@ export default class Player extends EventEmitter {
         });
     }
 
+    initEmitListeners(player = this) {
+        player.entities.forEach(entity => {
+            if (entity instanceof WorkerUnit) {
+                entity.on('delivery', (data) => {
+                    player.addResource(data.type, data.amount);
+                });
+            }
+            entity.on('died', () => {
+                const index = player.entities.indexOf(entity);
+                if (index > -1) {
+                    player.entities.splice(index, 1);
+                    if (entity instanceof Base) {
+                        player.base = null;
+                        player.entities = [];
+                        player.emit("lost");
+                    }
+                }
+            });
+        });
+    }
+
     removeResource(resType, resUnits) {
         this.resources[resType] -= resUnits;
         this.emit("updateRes", this.resources);
     }
 
     clone() {
-        let player = new Player(this.name, this.id, this.color, this.base.gridX, this.base.gridY);
-        player.ap = this.ap;
-        player.resources = structuredClone(this.resources);
-
-        player.entities = [];
+        let clone = new Player(this.name, this.id, this.color, this.base.gridX, this.base.gridY, true);
+        clone.entities = [];
+        clone.ap = this.ap;
+        clone.resources = structuredClone(this.resources);
 
         this.entities.forEach(entity => {
-            let clonedEntity = entity.clone();
-            if (clonedEntity && clonedEntity.hasOwnProperty('base')) {
-                clonedEntity.base = player.base;
+            const clonedEntity = entity.clone();
+            clone.entities.push(clonedEntity);
+
+            if (clonedEntity instanceof Base) {
+                clone.base = clonedEntity;
             }
-            if (clonedEntity instanceof WorkerUnit) this.initEmitListeners(clonedEntity, player);
-            player.entities.push(clonedEntity);
         });
 
-        return player;
+        clone.entities.forEach(entity => {
+            if (entity instanceof WorkerUnit || entity instanceof Truck) {
+                entity.base = clone.base;
+            }
+        });
+
+        clone.initEmitListeners(clone)
+
+        return clone;
     }
 }

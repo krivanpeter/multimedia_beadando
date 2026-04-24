@@ -8,9 +8,11 @@ export default class Health extends EventEmitter {
         this.current = max;
     }
 
-    reduce(amount){
+    reduce(amount) {
+        if (this.currentHp <= 0) return;
+
         this.current -= amount;
-        if(this.current <= 0){
+        if (this.current <= 0) {
             this.emit("zero");
         }
     }

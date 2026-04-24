@@ -7,10 +7,10 @@ export default class Base extends Entity {
         super(gridX, gridY, "BASE", playerId);
         this.playerColor = playerColor;
         this.health = new Health(BASE_HP);
-        this.initEvenListener();
+        this.initEventListener();
     }
 
-    initEvenListener() {
+    initEventListener() {
         this.health.on('zero', () => {
             this.emit("died");
         });
@@ -24,6 +24,8 @@ export default class Base extends Entity {
     }
 
     clone() {
-        return new Base(this.gridX, this.gridY, this.playerColor);
+        const clone = new Base(this.gridX, this.gridY, this.playerColor, this.playerId);
+        clone.health.currentHp = this.health.currentHp;
+        return clone
     }
 }

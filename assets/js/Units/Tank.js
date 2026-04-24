@@ -29,7 +29,7 @@ export default class Tank extends Unit {
     }
 
     clone() {
-        let clone = new Tank(this.gridX, this.gridY, this.playerId);
+        const clone = new Tank(this.gridX, this.gridY, this.playerId);
         return super.clone(clone);
     }
 }

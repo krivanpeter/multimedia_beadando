@@ -142,7 +142,7 @@ export default class Unit extends Entity {
         clone.target = this.target;
         clone.state = this.state;
         clone.clickable = this.clickable;
-        clone.health = this.health;
+        clone.health.currentHp = this.health.currentHp;
 
         clone.facing = this.facing;
         clone.moveDirection = this.moveDirection;

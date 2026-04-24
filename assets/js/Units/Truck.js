@@ -10,7 +10,7 @@ export default class Truck extends WorkerUnit {
     }
 
     clone() {
-        let clone = new Truck(this.gridX, this.gridY, this.playerId, this.base);
+        const clone = new Truck(this.gridX, this.gridY, this.playerId, this.base);
         return super.clone(clone);
     }
 }
