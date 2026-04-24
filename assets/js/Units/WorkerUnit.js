@@ -76,18 +76,10 @@ export default class WorkerUnit extends Unit {
 
     clone() {
         let clone = new this.constructor(this.startX, this.startY, this.playerId, this.base);
-        clone.maxHp = this.maxHp;
-        clone.currentHp = this.currentHp;
-        clone.asset = this.asset;
-        clone.x = this.x;
-        clone.y = this.y;
-        clone.moveDirection = this.moveDirection
-        clone.facing = this.facing
-
-        clone.rotation = this.rotation;
-        clone.flip = this.flip;
-        clone.direction = this.direction;
-
-        return clone
+        clone.type = this.type;
+        clone.base = this.base;
+        clone.startX = this.startX;
+        clone.startY = this.startY;
+        return super.clone(clone);
     }
 }

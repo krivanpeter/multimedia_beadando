@@ -52,7 +52,16 @@ export default class Entity extends EventEmitter {
 
     }
 
-    clone() {
+    clone(newEntity) {
+        newEntity.x = this.x;
+        newEntity.y = this.y;
+        newEntity.asset = this.asset;
+        newEntity.playerId = this.playerId;
+        newEntity.isHighlighted = this.isHighlighted;
 
+        newEntity.rotation = this.rotation;
+        newEntity.flip = this.flip;
+        newEntity.direction = this.direction;
+        return newEntity;
     }
 }

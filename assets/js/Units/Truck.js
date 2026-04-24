@@ -5,7 +5,12 @@ export default class Truck extends WorkerUnit {
         super(gridX, gridY, playerId, base, "TRUCK");
     }
 
-    moveTowardsTarget(dt){
+    moveTowardsTarget(dt) {
         super.moveTowardsTarget(dt, "default")
+    }
+
+    clone() {
+        let clone = new Truck(this.gridX, this.gridY, this.playerId, this.base);
+        return super.clone(clone);
     }
 }

@@ -150,7 +150,7 @@ export default class Player extends EventEmitter {
 
         this.entities.forEach(entity => {
             let clonedEntity = entity.clone();
-            if (clonedEntity.hasOwnProperty('base')) {
+            if (clonedEntity && clonedEntity.hasOwnProperty('base')) {
                 clonedEntity.base = player.base;
             }
             if (clonedEntity instanceof WorkerUnit) this.initEmitListeners(clonedEntity, player);

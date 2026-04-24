@@ -9,9 +9,9 @@ export default class Tank extends Unit {
         this.range = UNIT_DATA.TANK.RANGE;
         this.attackDamage = UNIT_DATA.TANK.DAMAGE;
         this.rockets = [];
-    }       
+    }
 
-    shoot(){
+    shoot() {
         console.log("bumm");
         let rocket = new Rocket(this.gridX, this.gridY);
         this.rockets.push(rocket);
@@ -19,15 +19,6 @@ export default class Tank extends Unit {
 
     clone() {
         let clone = new Tank(this.gridX, this.gridY, this.playerId);
-        clone.maxHp = this.maxHp;
-        clone.currentHp = this.currentHp;
-        clone.asset = this.asset;
-        clone.moveDirection = this.moveDirection
-        clone.facing = this.facing
-        clone.rotation = this.rotation;
-        clone.flip = this.flip;
-        clone.direction = this.direction;
-        clone.rockets = this.rockets;
-        return clone;
+        return super.clone(clone);
     }
 }

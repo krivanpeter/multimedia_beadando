@@ -16,11 +16,12 @@ export default class Unit extends Entity {
 
         this.facing = (playerId === 1) ? "right" : "left";
         this.moveDirection = null;
-        this.setFacing();
 
         this.moveSound = new Audio(sounds.move);
         this.moveSound.loop = true;
         this.moveSound.volume = 1;
+
+        this.setFacing();
     }
 
     get targetXpx() { return this.target.gridX * TILE_SIZE; }
@@ -30,7 +31,7 @@ export default class Unit extends Entity {
         super.draw(ctx, spriteSheet);
         this.health.draw(ctx, this.x, this.y);
     }
-    
+
     update(dt) {
         if (this.state === "idle") {
             this.stopMoveSound();
@@ -127,5 +128,21 @@ export default class Unit extends Entity {
     stopMoveSound() {
         this.moveSound.pause();
         this.moveSound.currentTime = 0;
+    }
+
+    clone(clone) {
+        clone.cost = this.cost;
+        clone.target = this.target;
+        clone.state = this.state;
+        clone.clickable = this.clickable;
+        clone.health = this.health;
+
+        clone.facing = this.facing;
+        clone.moveDirection = this.moveDirection;
+
+        clone.moveSound = this.moveSound;
+        clone.moveSound.loop = this.moveSound.loop;
+        clone.moveSound.volume = this.moveSound.volume;
+        return super.clone(clone);
     }
 }
