@@ -11,10 +11,20 @@ export default class Tank extends Unit {
         this.rockets = [];
     }
 
-    shoot() {
-        console.log("bumm");
-        let rocket = new Rocket(this.gridX, this.gridY);
+    shoot(target) {
+        let rocket = new Rocket(this.rockets.length, this.gridX, this.gridY, target);
+        rocket.on('exploded', (data) => {
+            console.log(data.target);
+            this.rockets.splice(data.index, 1);
+        });
         this.rockets.push(rocket);
+    }
+
+    update(dt) {
+        this.rockets.forEach(rocket => {
+            rocket.update(dt);
+        });
+        super.update(dt);
     }
 
     clone() {

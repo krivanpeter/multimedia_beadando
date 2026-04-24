@@ -68,7 +68,7 @@ export default class Player extends EventEmitter {
                 const dist = Math.abs(target.gridX - this.selectedUnit.gridX) +
                     Math.abs(target.gridY - this.selectedUnit.gridY);
                 if (dist <= this.selectedUnit.range) {
-                    this.selectedUnit.shoot();
+                    this.selectedUnit.shoot(target);
                     this.updateAp(1);
                 }
             }
