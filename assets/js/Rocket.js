@@ -2,9 +2,8 @@ import { TILE_SIZE, ROCKET_SPEED } from "./initSettings.js";
 import Entity from "./Entity.js";
 
 export default class Rocket extends Entity {
-    constructor(index, gridX, gridY, target, playerId) {
+    constructor(gridX, gridY, target, playerId) {
         super(gridX, gridY, "ROCKET", playerId);
-        this.index = index;
         this.target = target;
         this.rotation = this.setRotation();
     }
@@ -25,7 +24,7 @@ export default class Rocket extends Entity {
             this.x += (distX / distance) * moveStep;
             this.y += (distY / distance) * moveStep;
         } else {
-            this.emit("exploded", { index: this.index, target: this.target });
+            this.emit("exploded", this.target);
         }
     }
 }
