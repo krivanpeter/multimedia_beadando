@@ -23,6 +23,7 @@ export default class Player extends EventEmitter {
 
     init(x, y) {
         this.base = new Base(x, y, this.color, this.id);
+        this.entities.push(this.base);
         this.createWorkerUnit(x, y);
     }
 
@@ -62,7 +63,7 @@ export default class Player extends EventEmitter {
     handleInteraction(target, gridPos) {
         if (target instanceof Unit && target.playerId === this.id) {
             this.selectUnit(target);
-        } else if (target instanceof Unit && target.playerId !== this.id) {
+        } else if ((target instanceof Unit || target instanceof Base ) && target.playerId !== this.id) {
             if (this.selectedUnit instanceof Tank && this.ap > 0) {
                 const dist = Math.abs(target.gridX - this.selectedUnit.gridX) +
                     Math.abs(target.gridY - this.selectedUnit.gridY);

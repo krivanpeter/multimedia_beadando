@@ -22,8 +22,6 @@ export default class Tank extends Unit {
         clone.maxHp = this.maxHp;
         clone.currentHp = this.currentHp;
         clone.asset = this.asset;
-        clone.gridX = this.gridX;
-        clone.gridY = this.gridY;
         clone.moveDirection = this.moveDirection
         clone.facing = this.facing
         clone.rotation = this.rotation;

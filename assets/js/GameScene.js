@@ -117,9 +117,8 @@ export default class GameScene {
 
         if (!this.isValidGridPos(gridPos.gridX, gridPos.gridY)) return;
 
-        const allUnits = this.players.flatMap(p => p.entities);
-        const allBases = this.players.map(p => p.base);
-        const allClickables = [...allUnits, ...allBases, ...this.resources];
+        const allEntities = this.players.flatMap(p => p.entities);
+        const allClickables = [...allEntities, ...this.resources];
 
         const clickedEntity = allClickables.find(obj => obj && obj.contains(mouseX, mouseY));
         if (!clickedEntity) {
@@ -304,11 +303,9 @@ export default class GameScene {
     }
 
     isTileOccupied(gridX, gridY) {
-        const allBases = this.players.flatMap(p => p.base);
-        const allUnits = this.players.flatMap(p => p.entities);
-        const unitOccupies = allUnits.some(unit => unit.gridX === gridX && unit.gridY === gridY);
-        const buildingOccupies = allBases.some(base => base.gridX === gridX && base.gridY === gridY);
-        return unitOccupies || buildingOccupies;
+        const allEntities = this.players.flatMap(p => p.entities);
+        const entityOccupies = allEntities.some(unit => unit.gridX === gridX && unit.gridY === gridY);
+        return entityOccupies;
     }
 
     getFillStyleForAp() {
