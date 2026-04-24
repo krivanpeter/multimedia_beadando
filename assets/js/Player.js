@@ -23,6 +23,7 @@ export default class Player extends EventEmitter {
 
     init(x, y) {
         this.base = new Base(x, y, this.color, this.id);
+        this.initEmitListeners(this.base);
         this.entities.push(this.base);
         this.createWorkerUnit(x, y);
     }
@@ -63,7 +64,7 @@ export default class Player extends EventEmitter {
     handleInteraction(target, gridPos) {
         if (target instanceof Unit && target.playerId === this.id) {
             this.selectUnit(target);
-        } else if ((target instanceof Unit || target instanceof Base ) && target.playerId !== this.id) {
+        } else if ((target instanceof Unit || target instanceof Base) && target.playerId !== this.id) {
             if (this.selectedUnit instanceof Tank && this.ap > 0) {
                 const dist = Math.abs(target.gridX - this.selectedUnit.gridX) +
                     Math.abs(target.gridY - this.selectedUnit.gridY);
@@ -119,20 +120,33 @@ export default class Player extends EventEmitter {
     }
 
     draw(ctx, spriteSheet) {
-        this.base.draw(ctx, spriteSheet);
-        this.entities.forEach(entity => {
-            entity.draw(ctx, spriteSheet);
-            if (entity instanceof Tank) {
-                entity.rockets.forEach(rocket => {
-                    rocket.draw(ctx, spriteSheet);
-                });
-            }
-        });
+        if (this.entities.length > 0) {
+            this.base.draw(ctx, spriteSheet);
+            this.entities.forEach(entity => {
+                entity.draw(ctx, spriteSheet);
+                if (entity instanceof Tank) {
+                    entity.rockets.forEach(rocket => {
+                        rocket.draw(ctx, spriteSheet);
+                    });
+                }
+            });
+        }
     }
 
-    initEmitListeners(worker, player = this) {
-        worker.on('delivery', (data) => {
-            player.addResource(data.type, data.amount);
+    initEmitListeners(entity, player = this) {
+        if (!entity instanceof Tank && !entity instanceof Base) {
+            entity.on('delivery', (data) => {
+                player.addResource(data.type, data.amount);
+            });
+        }
+        entity.on('died', () => {
+            const index = this.entities.indexOf(entity);
+            this.entities.splice(index, 1);
+            if (entity instanceof Base) {
+                this.base = null;
+                this.entities = [];
+                this.emit("lost");
+            }
         });
     }
 

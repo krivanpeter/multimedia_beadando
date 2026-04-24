@@ -7,6 +7,13 @@ export default class Base extends Entity {
         super(gridX, gridY, "BASE", playerId);
         this.playerColor = playerColor;
         this.health = new Health(BASE_HP);
+        this.initEvenListener();
+    }
+
+    initEvenListener() {
+        this.health.on('zero', () => {
+            this.emit("died");
+        });
     }
 
     draw(ctx, spriteSheet) {

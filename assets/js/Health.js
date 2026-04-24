@@ -1,9 +1,18 @@
+import EventEmitter from './EventEmitter.js';
 import { HEALTH, TILE_SIZE } from './initSettings.js';
 
-export default class Health {
+export default class Health extends EventEmitter {
     constructor(max) {
+        super();
         this.max = max;
         this.current = max;
+    }
+
+    reduce(amount){
+        this.current -= amount;
+        if(this.current <= 0){
+            this.emit("zero");
+        }
     }
 
     draw(ctx, x, y) {

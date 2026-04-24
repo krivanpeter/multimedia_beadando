@@ -14,7 +14,7 @@ export default class Tank extends Unit {
     shoot(target) {
         let rocket = new Rocket(this.gridX, this.gridY, target);
         rocket.on('exploded', (target) => {
-            console.log(target);
+            target.health.reduce(this.attackDamage);
             const index = this.rockets.indexOf(rocket);
             this.rockets.splice(index, 1);
         });

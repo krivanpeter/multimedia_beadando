@@ -22,10 +22,17 @@ export default class Unit extends Entity {
         this.moveSound.volume = 1;
 
         this.setFacing();
+        this.initEvenListener();
     }
 
     get targetXpx() { return this.target.gridX * TILE_SIZE; }
     get targetYpx() { return this.target.gridY * TILE_SIZE; }
+
+    initEvenListener() {
+        this.health.on('zero', () => {
+            this.emit("died");
+        });
+    }
 
     draw(ctx, spriteSheet) {
         super.draw(ctx, spriteSheet);

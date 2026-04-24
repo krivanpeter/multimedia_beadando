@@ -67,6 +67,9 @@ export default class GameScene {
             player.on('updateRes', (res) => {
                 this.updateResUI(res);
             });
+            player.on('lost', () => {
+                console.log(`Player ${player.id} has lost the game!`);
+            });
         });
     }
 
@@ -146,7 +149,6 @@ export default class GameScene {
             const enemyUnit = this.players
                 .find(p => p.id !== this.currentPlayer.id)
                 .entities.find(e => e.gridX === gridPos.gridX && e.gridY === gridPos.gridY);
-
             if (selected instanceof Tank && enemyUnit && this.currentPlayer.ap > 0) {
                 const dist = Math.abs(gridPos.gridX - selected.gridX) + Math.abs(gridPos.gridY - selected.gridY);
                 if (dist <= selected.range) {
