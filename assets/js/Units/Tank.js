@@ -12,6 +12,8 @@ export default class Tank extends Unit {
     }
 
     shoot(target) {
+        this.faceTarget(target);
+
         let rocket = new Rocket(this.gridX, this.gridY, target);
         rocket.on('exploded', (target) => {
             target.health.reduce(this.attackDamage);
@@ -19,6 +21,22 @@ export default class Tank extends Unit {
             this.rockets.splice(index, 1);
         });
         this.rockets.push(rocket);
+    }
+
+    faceTarget(target) {
+        const dx = target.x - this.x;
+        const dy = target.y - this.y;
+        const angle = Math.atan2(dy, dx);
+
+        if (dx < 0) {
+            this.facing = "left";
+            this.flip = true;
+            this.rotation = Math.PI + angle;
+        } else {
+            this.facing = "right";
+            this.flip = false;
+            this.rotation = angle;
+        }
     }
 
     update(dt) {
