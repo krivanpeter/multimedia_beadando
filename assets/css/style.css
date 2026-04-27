@@ -20,6 +20,16 @@ img {
     height: 832px;
 }
 
+.game-round {
+    color: white;
+    width: 100%;
+    justify-content: space-between;
+    text-align: center;
+    padding: 0 20px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
 .gui {
     display: flex;
     color: white;
@@ -30,7 +40,7 @@ img {
     box-sizing: border-box;
 }
 
-.player_resources {
+.player-resources {
     display: flex;
     align-items: center;
 }
@@ -47,7 +57,7 @@ img {
     color: white;
 }
 
-.player_build_menu {
+.player-build-menu {
     width: 45%;
     border: 1px solid #444;
     padding: 5px;
@@ -105,4 +115,64 @@ img {
     75% {
         transform: translateX(4px);
     }
+}
+
+.round-btn {
+    padding: 5px 15px;
+    background: #2bfacd;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.round-btn:hover {
+    background: #1eb898;
+    transform: translateY(-2px);
+}
+
+#menuBtn{
+    padding: 10px 25px;
+    font-size: 1rem;
+    font-weight: bolder;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.menu-box {
+    background: #1a1a3a;
+    border: 3px solid #2bfacd;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+}
+
+.menu-btn {
+    display: block;
+    width: 100%;
+    padding: 15px 30px;
+    margin: 15px 0;
+    background: #2bfacd;
+    border: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.menu-btn:hover {
+    background: #1eb898;
+    transform: translateY(-2px);
 }

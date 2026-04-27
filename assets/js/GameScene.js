@@ -29,11 +29,17 @@ export default class GameScene {
     }
 
     start(callback) {
-        this.spriteSheet.onload = () => {
+        const onReady = () => {
             this.init();
             this.setupInputs();
             callback();
         };
+
+        if (this.spriteSheet.complete) {
+            onReady();
+        } else {
+            this.spriteSheet.onload = onReady;
+        }
     }
 
     init() {
@@ -69,6 +75,7 @@ export default class GameScene {
             });
             player.on('lost', () => {
                 console.log(`Player ${player.id} has lost the game!`);
+
             });
         });
     }
@@ -354,7 +361,7 @@ export default class GameScene {
 
     updateBuildMenu() {
         const prevPlayerId = (this.currentPlayer.id === 1) ? 2 : 1;
-        $(`.player_build_menu div[data-player="${prevPlayerId}"]`).removeClass("build-item");
-        $(`.player_build_menu div[data-player="${this.currentPlayer.id}"]`).addClass("build-item");
+        $(`.player-build-menu div[data-player="${prevPlayerId}"]`).removeClass("build-item");
+        $(`.player-build-menu div[data-player="${this.currentPlayer.id}"]`).addClass("build-item");
     }
 }

@@ -12,25 +12,26 @@
 
 <body>
     <div class="game-wrapper">
+        <div class="game-round">
+            <div>
+                <button id="menuBtn" class="round-btn">MENU</button>
+                <p>
+                    <span>Current player:</span>
+                    <span id="currentPlayer"></span>
+                </p>
+                <p><span>Action Points:</span><span id="ap">10</span>
+                <p>
+                    <button id="resetBtn" class="round-btn">RESET MY TURN</button>
+                    <button id="endTurnBtn" class="round-btn">END MY TURN</button>
+            </div>
+        </div>
         <div class="gui">
-            <div id="p1gui" class="player_resources">
+            <div id="p1gui" class="player-resources">
                 <img src="assets/imgs/rock.png" alt="Player 1 rocks"><span class="amount" id="rock1">0</span>
                 <img src="assets/imgs/iron.png" alt="Player 1 irons"><span class="amount" id="iron1">0</span>
                 <img src="assets/imgs/uranium.png" alt="Player 1 uraniums"><span class="amount" id="uranium1">0</span>
             </div>
-            <div class="game_round">
-                <div style="text-align: center;">
-                    <p>
-                        <span>Current player:</span>
-                        <span id="currentPlayer"></span>
-                    </p>
-                    <p><span>Action Points:</span><span id="ap">10</span>
-                    <p>
-                        <button id="resetBtn">RESET MY TURN</button>
-                        <button id="endTurnBtn">END MY TURN</button>
-                </div>
-            </div>
-            <div id="p2gui" class="player_resources">
+            <div id="p2gui" class="player-resources">
                 <img src="assets/imgs/rock.png" alt="Player 2 rocks"><span class="amount" id="rock2">0</span>
                 <img src="assets/imgs/iron.png" alt="Player 2 irons"><span class="amount" id="iron2">0</span>
                 <img src="assets/imgs/uranium.png" alt="Player 2 uraniums"><span class="amount" id="uranium2">0</span>
@@ -40,7 +41,7 @@
         <canvas id="canvas"></canvas>
 
         <div class="build-wrapper">
-            <div id="p1build" class="player_build_menu">
+            <div id="p1build" class="player-build-menu">
                 <div class="build-items">
                     <div class="build-item" data-type="worker" data-player="1">
                         <img src="assets/imgs/blue_worker.png" alt="Build worker">
@@ -57,7 +58,7 @@
                 </div>
             </div>
 
-            <div id="p2build" class="player_build_menu">
+            <div id="p2build" class="player-build-menu">
                 <div class="build-items">
                     <div class="build-item" data-type="worker" data-player="2">
                         <img src="assets/imgs/green_worker.png" alt="Build worker">
@@ -72,6 +73,15 @@
                         <span class="cost"></span>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div id="mainMenu" class="overlay">
+        <div class="menu-box">
+            <h1 id="menuTitle">MENU</h1>
+            <div class="menu-content">
+                <button id="startGameBtn" class="menu-btn">START GAME</button>
+                <button id="resumeBtn" class="menu-btn" style="display: none;">CONTINUE</button>
             </div>
         </div>
     </div>

@@ -46,7 +46,7 @@ export const UNIT_DATA = {
 
 export const PLAYERS = [
     { name: "Peti", id: 1, color: "blue", x: 2, y: 6 },
-    { name: "A vesztes", id: 2, color: "green", x: 22, y: 6 },
+    { name: "The loser", id: 2, color: "green", x: 22, y: 6 },
 ];
 
 export const RESOURCES = [
