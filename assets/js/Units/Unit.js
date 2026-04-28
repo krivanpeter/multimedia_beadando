@@ -22,13 +22,13 @@ export default class Unit extends Entity {
         this.moveSound.volume = 1;
 
         this.setFacing();
-        this.initEvenListener();
+        this.initEventListener();
     }
 
     get targetXpx() { return this.target.gridX * TILE_SIZE; }
     get targetYpx() { return this.target.gridY * TILE_SIZE; }
 
-    initEvenListener() {
+    initEventListener() {
         this.health.on('zero', () => {
             this.emit("died");
         });
@@ -142,10 +142,12 @@ export default class Unit extends Entity {
         clone.target = this.target;
         clone.state = this.state;
         clone.clickable = this.clickable;
-        clone.health.currentHp = this.health.currentHp;
 
         clone.facing = this.facing;
         clone.moveDirection = this.moveDirection;
+
+        clone.health = this.health.clone();
+        clone.initEventListener();
 
         clone.moveSound = this.moveSound;
         clone.moveSound.loop = this.moveSound.loop;

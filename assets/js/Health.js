@@ -43,4 +43,10 @@ export default class Health extends EventEmitter {
         ctx.textBaseline = "middle";
         ctx.fillText(`${this.current}/${this.max}`, centerX, centerY);
     }
+
+    clone(){
+        let clone = new Health(this.max);
+        clone.current = this.current;
+        return clone;
+    }
 }

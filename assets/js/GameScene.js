@@ -3,10 +3,12 @@ import Player from './Player.js';
 import Resource from './Resource.js';
 import Unit from './Units/Unit.js';
 import Tank from './Units/Tank.js';
+import EventEmitter from './EventEmitter.js';
 import { CHEAT_ON, WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES, UNIT_DATA } from './initSettings.js';
 
-export default class GameScene {
+export default class GameScene extends EventEmitter {
     constructor(canvasId, spriteSheetSrc) {
+        super();
         this.canvas = document.getElementById(canvasId);
         this.ctx = this.canvas.getContext("2d");
 
@@ -75,7 +77,11 @@ export default class GameScene {
             });
             player.on('lost', () => {
                 console.log(`Player ${player.id} has lost the game!`);
-
+                const winner = this.players.find(p => p.id !== player.id);
+                this.emit("gameOver", {
+                    name: winner.name,
+                    color: winner.color
+                });
             });
         });
     }

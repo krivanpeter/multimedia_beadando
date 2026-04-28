@@ -25,7 +25,8 @@ export default class Base extends Entity {
 
     clone() {
         const clone = new Base(this.gridX, this.gridY, this.playerColor, this.playerId);
-        clone.health.currentHp = this.health.currentHp;
+        clone.health = this.health.clone();
+        clone.initEventListener();
         return clone
     }
 }

@@ -18,38 +18,53 @@ export default class Player extends EventEmitter {
         this.resources = { rock: 0, iron: 0, uranium: 0 }
         this.selectedUnit = null;
         this.ap = ACTION_POINTS;
-
-        this.isCloning = isCloning;
-
-        if (!this.isCloning) {
+        if (!isCloning) {
             this.init(baseX, baseY);
-        } else {
-            this.initEmitListeners();
         }
     }
 
-    init(x, y) {
-        this.base = new Base(x, y, this.color, this.id);
-        this.entities.push(this.base);
-        this.createWorkerUnit(x, y);
+    init(gridX, gridY) {
+        const base = new Base(gridX, gridY, this.color, this.id);
+        this.base = base;
+        this.registerEntity(this.base);
+
+        const offset = (this.id === 1) ? 1 : -1;
+        this.createUnit(WorkerUnit, gridX + offset, gridY);
+    }
+
+    registerEntity(entity) {
+        if (!entity) return;
+
+        if (entity instanceof WorkerUnit) {
+            entity.on('delivery', (data) => this.addResource(data.type, data.amount));
+        }
+
+        entity.on('died', () => this.handleEntityDeath(entity));
+
+        if (!this.entities.includes(entity)) {
+            this.entities.push(entity);
+        }
+        return entity;
+    }
+
+    handleEntityDeath(entity) {
+        this.entities = this.entities.filter(e => e !== entity);
+
+        if (entity instanceof Base) {
+            this.base = null;
+            this.entities = [];
+            this.emit("lost");
+        }
     }
 
     createUnit(UnitClass, gridX, gridY) {
-        if (this.isTileOccupied(gridX, gridY)) {
-            return null;
-        }
+        if (this.isTileOccupied(gridX, gridY)) return null;
+
         const unit = new UnitClass(gridX, gridY, this.id, this.base);
-        if (!this.isCloning) {
-            this.addEmitListener(unit);
-        }
-
-        this.entities.push(unit);
-
-        return unit;
+        return this.registerEntity(unit);
     }
 
     createWorkerUnit(x, y) {
-        const offset = (this.id === 1) ? 1 : -1;
         return this.createUnit(WorkerUnit, x + offset, y);
     }
 
@@ -67,6 +82,11 @@ export default class Player extends EventEmitter {
 
     addResource(type, amount) {
         this.resources[type] += amount;
+        this.emit("updateRes", this.resources);
+    }
+
+    removeResource(resType, resUnits) {
+        this.resources[resType] -= resUnits;
         this.emit("updateRes", this.resources);
     }
 
@@ -129,84 +149,38 @@ export default class Player extends EventEmitter {
     }
 
     draw(ctx, spriteSheet) {
-        if (this.entities.length > 0) {
-            this.base.draw(ctx, spriteSheet);
-            this.entities.forEach(entity => {
-                entity.draw(ctx, spriteSheet);
-                if (entity instanceof Tank) {
-                    entity.rockets.forEach(rocket => {
-                        rocket.draw(ctx, spriteSheet);
-                    });
-                }
-            });
-        }
-    }
-
-    addEmitListener(entity) {
-        if (entity instanceof WorkerUnit) {
-            entity.on('delivery', (data) => {
-                this.addResource(data.type, data.amount);
-            });
-        }
-        entity.on('died', () => {
-            const index = this.entities.indexOf(entity);
-            this.entities.splice(index, 1);
-            if (entity instanceof Base) {
-                this.base = null;
-                this.entities = [];
-                this.emit("lost");
+        this.entities.forEach(entity => {
+            entity.draw(ctx, spriteSheet);
+            if (entity instanceof Tank && entity.rockets) {
+                entity.rockets.forEach(r => r.draw(ctx, spriteSheet));
             }
         });
-    }
-
-    initEmitListeners(player = this) {
-        player.entities.forEach(entity => {
-            if (entity instanceof WorkerUnit) {
-                entity.on('delivery', (data) => {
-                    player.addResource(data.type, data.amount);
-                });
-            }
-            entity.on('died', () => {
-                const index = player.entities.indexOf(entity);
-                if (index > -1) {
-                    player.entities.splice(index, 1);
-                    if (entity instanceof Base) {
-                        player.base = null;
-                        player.entities = [];
-                        player.emit("lost");
-                    }
-                }
-            });
-        });
-    }
-
-    removeResource(resType, resUnits) {
-        this.resources[resType] -= resUnits;
-        this.emit("updateRes", this.resources);
     }
 
     clone() {
-        let clone = new Player(this.name, this.id, this.color, this.base.gridX, this.base.gridY, true);
-        clone.entities = [];
+        let clone = new Player(this.name, this.id, this.color, null, null, true);
         clone.ap = this.ap;
         clone.resources = structuredClone(this.resources);
 
+        const entityMap = new Map();
+
         this.entities.forEach(entity => {
             const clonedEntity = entity.clone();
-            clone.entities.push(clonedEntity);
+            entityMap.set(entity, clonedEntity);
 
-            if (clonedEntity instanceof Base) {
+            if (entity === this.base) {
                 clone.base = clonedEntity;
             }
         });
 
-        clone.entities.forEach(entity => {
-            if (entity instanceof WorkerUnit || entity instanceof Truck) {
-                entity.base = clone.base;
-            }
-        });
+        this.entities.forEach(oldEntity => {
+            const newEntity = entityMap.get(oldEntity);
 
-        clone.initEmitListeners(clone)
+            if ('base' in newEntity) {
+                newEntity.base = clone.base;
+            }
+            clone.registerEntity(newEntity);
+        });
 
         return clone;
     }
