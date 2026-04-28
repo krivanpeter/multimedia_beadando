@@ -13,17 +13,19 @@
 <body>
     <div class="game-wrapper">
         <div class="game-round">
-            <div>
-                <button id="menuBtn" class="round-btn">MENU</button>
-                <p>
-                    <span>Current player:</span>
-                    <span id="currentPlayer"></span>
-                </p>
-                <p><span>Action Points:</span><span id="ap">10</span> </p>
-                <div>
-                    <button id="resetBtn" class="round-btn">RESET MY TURN</button>
-                    <button id="endTurnBtn" class="round-btn">END MY TURN</button>
-                </div>
+            <button id="menuBtn" class="round-btn">MENU</button>
+            <p class="player-display">
+                <span>Current player:</span>
+                <span id="currentPlayer"></span>
+            </p>
+            <div class="action-row">
+                <button id="resetBtn" class="round-btn">RESET MY TURN</button>
+
+                <span class="ap-display">
+                    <span>Action Points:</span>
+                    <span id="ap">10</span>
+                </span>
+                <button id="endTurnBtn" class="round-btn">END MY TURN</button>
             </div>
         </div>
         <div class="gui">
@@ -78,6 +80,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div id="createdBy">
+            <p>Created by: Péter Kriván</p>
+            <p>Neptun Code: F1X8PG</p>
         </div>
     </div>
     <div id="gameOverMenu" class="overlay" style="display: none;">
