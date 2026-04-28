@@ -5,7 +5,7 @@ import Unit from './Units/Unit.js';
 import WorkerUnit from './Units/WorkerUnit.js';
 import Truck from './Units/Truck.js';
 import Tank from './Units/Tank.js';
-import { ACTION_POINTS } from './initSettings.js';
+import { ACTION_POINTS, WIN_COND_URANIUM } from './initSettings.js';
 
 export default class Player extends EventEmitter {
     constructor(name, id, color, baseX, baseY, isCloning = false) {
@@ -83,6 +83,9 @@ export default class Player extends EventEmitter {
     addResource(type, amount) {
         this.resources[type] += amount;
         this.emit("updateRes", this.resources);
+        if(this.resources.uranium === WIN_COND_URANIUM){
+            this.emit("won");
+        }
     }
 
     removeResource(resType, resUnits) {

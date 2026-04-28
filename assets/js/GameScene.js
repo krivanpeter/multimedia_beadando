@@ -76,11 +76,16 @@ export default class GameScene extends EventEmitter {
                 this.updateResUI(res);
             });
             player.on('lost', () => {
-                console.log(`Player ${player.id} has lost the game!`);
                 const winner = this.players.find(p => p.id !== player.id);
                 this.emit("gameOver", {
                     name: winner.name,
                     color: winner.color
+                });
+            });
+            player.on('won', () => {
+                this.emit("gameOver", {
+                    name: player.name,
+                    color: player.color
                 });
             });
         });
