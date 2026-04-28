@@ -2,9 +2,21 @@
 
 import GameScene from './GameScene.js';
 
-const game = new GameScene("canvas", "assets/imgs/scifi_tilesheet.png");
+let game;
 let lastTime = 0;
 let isPaused = true;
+
+function initGame() {
+    game = new GameScene("canvas", "assets/imgs/scifi_tilesheet.png");
+
+    game.on("gameOver", (winner) => {
+        console.log(winner);
+        isPaused = true;
+
+        $("#winnerText").text(`The winner is: ${winner.name}`);
+        $("#gameOverMenu").fadeIn(300);
+    });
+}
 
 function loop(currentTime) {
     if (isPaused) return;
@@ -19,10 +31,13 @@ function loop(currentTime) {
     requestAnimationFrame(loop);
 }
 
-$("#startGameBtn").on("click", () => {
-    $("#mainMenu").fadeOut(300);
-    $("#startGameBtn").hide();
+$("#startGameBtn, #newGameBtn").on("click", () => {
+    $(this).hide();
+    $("#gameOverMenu").hide();
+    $("#mainMenu").hide();
     $("#resumeBtn").show();
+
+    initGame();
 
     isPaused = false;
 
