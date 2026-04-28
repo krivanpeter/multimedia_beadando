@@ -23,8 +23,9 @@ export default class Player extends EventEmitter {
 
         if (!this.isCloning) {
             this.init(baseX, baseY);
+        } else {
+            this.initEmitListeners();
         }
-        this.initEmitListeners();
     }
 
     init(x, y) {
