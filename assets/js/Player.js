@@ -5,7 +5,7 @@ import Unit from './Units/Unit.js';
 import WorkerUnit from './Units/WorkerUnit.js';
 import Truck from './Units/Truck.js';
 import Tank from './Units/Tank.js';
-import { ACTION_POINTS, WIN_COND_URANIUM } from './initSettings.js';
+import { ACTION_POINTS, WIN_COND_URANIUM, CHEAT_ON } from './initSettings.js';
 
 export default class Player extends EventEmitter {
     constructor(name, id, color, baseX, baseY, isCloning = false) {
@@ -57,23 +57,27 @@ export default class Player extends EventEmitter {
         }
     }
 
-    createUnit(UnitClass, gridX, gridY) {
-        if (this.isTileOccupied(gridX, gridY)) return null;
+    createUnit(UnitClass, gridX, gridY, resType = null, resUnits = null) {
+        if (!CHEAT_ON) {
+            if (this.isTileOccupied(gridX, gridY)) return null;
+            if (this.resources[resType] < resUnits) return null;
+        }
 
         const unit = new UnitClass(gridX, gridY, this.id, this.base);
         return this.registerEntity(unit);
     }
 
-    createWorkerUnit(x, y) {
-        return this.createUnit(WorkerUnit, x + offset, y);
+    createWorkerUnit(resType, resUnits, x, y) {
+        const offset = (this.id === 1) ? 1 : -1;
+        return this.createUnit(WorkerUnit, x + offset, y, resType, resUnits);
     }
 
-    createTruck(x, y) {
-        return this.createUnit(Truck, x, y - 1);
+    createTruck(resType, resUnits, x, y) {
+        return this.createUnit(Truck, x, y - 1, resType, resUnits);
     }
 
-    createTank(x, y) {
-        return this.createUnit(Tank, x, y + 1);
+    createTank(resType, resUnits, x, y) {
+        return this.createUnit(Tank, x, y + 1, resType, resUnits);
     }
 
     isTileOccupied(gridX, gridY) {
@@ -83,21 +87,23 @@ export default class Player extends EventEmitter {
     addResource(type, amount) {
         this.resources[type] += amount;
         this.emit("updateRes", this.resources);
-        if(this.resources.uranium === WIN_COND_URANIUM){
+        if (this.resources.uranium === WIN_COND_URANIUM) {
             this.emit("won");
         }
     }
 
     removeResource(resType, resUnits) {
-        this.resources[resType] -= resUnits;
-        this.emit("updateRes", this.resources);
+        if (!CHEAT_ON) {
+            this.resources[resType] -= resUnits;
+            this.emit("updateRes", this.resources);
+        }
     }
 
     handleInteraction(target, gridPos) {
         if (target instanceof Unit && target.playerId === this.id) {
             this.selectUnit(target);
         } else if ((target instanceof Unit || target instanceof Base) && target.playerId !== this.id) {
-            if (this.selectedUnit instanceof Tank && this.ap > 0) {
+            if (this.selectedUnit instanceof Tank && (this.ap > 0 || CHEAT_ON)) {
                 const dist = Math.abs(target.gridX - this.selectedUnit.gridX) +
                     Math.abs(target.gridY - this.selectedUnit.gridY);
                 if (dist <= this.selectedUnit.range) {
@@ -143,12 +149,14 @@ export default class Player extends EventEmitter {
     }
 
     updateAp(ap = null) {
-        if (ap === null) {
-            this.ap = ACTION_POINTS;
-        } else {
-            this.ap -= ap;
+        if (!CHEAT_ON) {
+            if (ap === null) {
+                this.ap = ACTION_POINTS;
+            } else {
+                this.ap -= ap;
+            }
+            this.emit("updateAp", {});
         }
-        this.emit("updateAp", {});
     }
 
     draw(ctx, spriteSheet) {

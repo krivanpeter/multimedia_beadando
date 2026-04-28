@@ -1,10 +1,12 @@
 "use strict";
 
 import GameScene from './GameScene.js';
+import { ROUND_TIME } from './initSettings.js';
 
 let game;
 let lastTime = 0;
 let isPaused = true;
+let timerValue = ROUND_TIME;
 
 function initGame() {
     game = new GameScene("canvas", "assets/imgs/scifi_tilesheet.png");
@@ -25,10 +27,23 @@ function loop(currentTime) {
     const dt = (currentTime - lastTime) / 1000;
     lastTime = currentTime;
 
+    setRemainingTime(dt);
+
     game.update(Math.min(dt, 0.1));
     game.render();
 
     requestAnimationFrame(loop);
+}
+
+function setRemainingTime(dt) {
+    if (timerValue > 0) {
+        timerValue -= dt;
+        if (timerValue <= 0) {
+            game.endTurn();
+            timerValue = ROUND_TIME;
+        }
+        $("#remainingTime").text(Math.ceil(timerValue));
+    }
 }
 
 $("#startGameBtn, #newGameBtn").on("click", () => {

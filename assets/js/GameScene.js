@@ -167,7 +167,7 @@ export default class GameScene extends EventEmitter {
             const enemyUnit = this.players
                 .find(p => p.id !== this.currentPlayer.id)
                 .entities.find(e => e.gridX === gridPos.gridX && e.gridY === gridPos.gridY);
-            if (selected instanceof Tank && enemyUnit && this.currentPlayer.ap > 0) {
+            if (selected instanceof Tank && enemyUnit && (this.currentPlayer.ap > 0 || CHEAT_ON)) {
                 const dist = Math.abs(gridPos.gridX - selected.gridX) + Math.abs(gridPos.gridY - selected.gridY);
                 if (dist <= selected.range) {
                     this.canShoot = true;
@@ -211,7 +211,7 @@ export default class GameScene extends EventEmitter {
             return;
         }
         if (!CHEAT_ON) {
-            if (this.currentPlayer.ap <= 0 && true) {
+            if (this.currentPlayer.ap <= 0) {
                 return;
             }
         }
@@ -221,28 +221,26 @@ export default class GameScene extends EventEmitter {
         const resType = UNIT_DATA[selectedType.toUpperCase()].COST.type.toLowerCase();
         const resUnits = UNIT_DATA[selectedType.toUpperCase()].COST.unit;
 
-        if (CHEAT_ON || this.currentPlayer.resources[resType] >= resUnits) {
-            const result = this.getNewUnitType(selectedType);
-            if (!result) {
-                target.addClass("build-error");
-                setTimeout(() => {
-                    target.removeClass("build-error");
-                }, 500);
-                return;
-            }
-            this.currentPlayer.removeResource(resType, resUnits);
-            this.currentPlayer.updateAp(1);
+        const result = this.getNewUnitType(selectedType, resType, resUnits);
+        if (!result) {
+            target.addClass("build-error");
+            setTimeout(() => {
+                target.removeClass("build-error");
+            }, 500);
+            return;
         }
+        this.currentPlayer.removeResource(resType, resUnits);
+        this.currentPlayer.updateAp(1);
     }
 
-    getNewUnitType(selectedType) {
+    getNewUnitType(selectedType, resType, resUnits,) {
         switch (selectedType) {
             case "worker":
-                return this.currentPlayer.createWorkerUnit(this.currentPlayer.base.gridX, this.currentPlayer.base.gridY);
+                return this.currentPlayer.createWorkerUnit(resType, resUnits, this.currentPlayer.base.gridX, this.currentPlayer.base.gridY);
             case "truck":
-                return this.currentPlayer.createTruck(this.currentPlayer.base.gridX, this.currentPlayer.base.gridY);
+                return this.currentPlayer.createTruck(resType, resUnits, this.currentPlayer.base.gridX, this.currentPlayer.base.gridY);
             case "tank":
-                return this.currentPlayer.createTank(this.currentPlayer.base.gridX, this.currentPlayer.base.gridY);
+                return this.currentPlayer.createTank(resType, resUnits, this.currentPlayer.base.gridX, this.currentPlayer.base.gridY);
         }
     }
 

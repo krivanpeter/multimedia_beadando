@@ -1,7 +1,10 @@
 "use strict";
-export const GAME_SPEED = 20;
 
-export const CHEAT_ON = true;
+export const CHEAT_ON = false;
+
+export const ROUND_TIME = 60;
+export const GAME_SPEED = 20;
+export const WIN_COND_URANIUM = 20;
 
 export const RES_W = 1600;
 export const RES_H = 832;
@@ -14,7 +17,7 @@ export const HEALTH = {
     HEIGHT: 16
 };
 
-export const ACTION_POINTS = 100;
+export const ACTION_POINTS = 10;
 
 export const BASE_HP = 100;
 export const ROCKET_SPEED = 15;
