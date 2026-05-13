@@ -18,7 +18,6 @@ function initGame() {
     });
 
     game.on("gameOver", (winner) => {
-        console.log(winner);
         isPaused = true;
 
         $("#winnerText").text(`The winner is: ${winner.name}`);
@@ -71,6 +70,8 @@ $("#startGameBtn, #newGameBtn").on("click", function () {
 
 $("#menuBtn").on("click", function () {
     isPaused = true;
+    $("#saveGameBtn").show();
+
     $("#menuTitle").text("PAUSE");
     $("#mainMenu").fadeIn(300);
 });
@@ -159,5 +160,44 @@ $("#tutorialBtn").on("click", function () {
 $("#backFromTutorialBtn").on("click", function () {
     $("#tutorialMenu").fadeOut(300, () => {
         $("#mainMenu").show();
+    });
+});
+
+$("#saveGameBtn").on("click", function () {
+    const fullSave = {
+        gameState: game.getSerializedState(),
+        settings: settings
+    };
+
+    localStorage.setItem("save", JSON.stringify(fullSave));
+    alert("Game saved!");
+});
+
+$("#loadGameBtn").on("click", function () {
+    const rawData = localStorage.getItem("save");
+    if (!rawData) {
+        alert("There is no saved game!");
+        return;
+    }
+
+    const savedData = JSON.parse(rawData);
+
+    settings = savedData.settings;
+    setGameSpeed(settings.GAME_SPEED);
+    setRoundTime(settings.ROUND_TIME);
+    setSettingTexts();
+
+    if (!game) initGame();
+
+    $("#mainMenu").hide();
+    $("#resumeBtn").show();
+    $("#saveGameBtn").show();
+    isPaused = false;
+
+    game.start(() => {
+        game.loadFromState(savedData.gameState);
+        timerValue = settings.ROUND_TIME;
+        lastTime = performance.now();
+        requestAnimationFrame(loop);
     });
 });

@@ -1,9 +1,13 @@
 import Background from './Background.js';
-import Player from './Player.js';
 import Resource from './Resource.js';
-import Unit from './Units/Unit.js';
-import Tank from './Units/Tank.js';
 import EventEmitter from './EventEmitter.js';
+import Player from './Player.js';
+import Base from './Base.js';
+import Unit from './Units/Unit.js';
+import WorkerUnit from './Units/WorkerUnit.js';
+import Truck from './Units/Truck.js';
+import Tank from './Units/Tank.js';
+import Health from './Health.js';
 import { CHEAT_ON, WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES, UNIT_DATA } from './initSettings.js';
 
 export default class GameScene extends EventEmitter {
@@ -316,7 +320,12 @@ export default class GameScene extends EventEmitter {
         this.ctx.shadowColor = "black";
         this.ctx.shadowBlur = 4;
         this.ctx.fillText(
-            "SHOOT",
+            `SHOOT`,
+            this.hoveredGrid.gridX * TILE_SIZE + TILE_SIZE / 2,
+            this.hoveredGrid.gridY * TILE_SIZE + TILE_SIZE / 2.5
+        );
+        this.ctx.fillText(
+            `${SHOOT_AP_COST} AP`,
             this.hoveredGrid.gridX * TILE_SIZE + TILE_SIZE / 2,
             this.hoveredGrid.gridY * TILE_SIZE + TILE_SIZE / 1.5
         );
@@ -386,5 +395,85 @@ export default class GameScene extends EventEmitter {
         const prevPlayerId = (this.currentPlayer.id === 1) ? 2 : 1;
         $(`.player-build-menu div[data-player="${prevPlayerId}"]`).removeClass("build-item");
         $(`.player-build-menu div[data-player="${this.currentPlayer.id}"]`).addClass("build-item");
+    }
+
+    getSerializedState() {
+        return {
+            players: this.players.map(player => player.clone()),
+            currentPlayerId: this.currentPlayer.id,
+            resources: this.resources.map(res => ({ x: res.x, y: res.y, type: res.type }))
+        };
+    }
+
+    loadFromState(data) {
+        this.players = data.players.map(pData => this.restorePlayer(pData));
+
+        this.currentPlayer = this.players.find(p => p.id === data.currentPlayerId);
+        this.initEmitListeners();
+        this.updateRoundUI();
+        this.players.forEach(p => this.updateResUI(p));
+    }
+
+    restorePlayer(pData) {
+        const player = new Player(pData.name, pData.id, pData.color, 0, 0, true);
+        Object.assign(player, pData);
+        player.listeners = {};
+
+        player.entities = pData.entities.map(eData => {
+            const entity = this.createEntity(eData, player);
+            if (entity) {
+                this.rehydrateEntity(entity, eData);
+            }
+            return entity;
+        }).filter(e => e !== undefined);
+
+        player.entities.forEach(entity => {
+            if (entity instanceof Unit || 'base' in entity) {
+                entity.base = player.base;
+            }
+            player.registerEntity(entity);
+        });
+
+        return player;
+    }
+
+    createEntity(eData, player) {
+        switch (eData.type) {
+            case "BASE":
+                const base = new Base(eData.gridX, eData.gridY, player.color, player.id);
+                player.base = base;
+                return base;
+            case "WORKER":
+                return new WorkerUnit(eData.startX, eData.startY, player.id, null);
+            case "TRUCK":
+                return new Truck(eData.startX, eData.startY, player.id, null);
+            case "TANK":
+                return new Tank(eData.startX, eData.startY, player.id, null);
+            default:
+                return undefined;
+        }
+    }
+
+    rehydrateEntity(entity, eData) {
+        const savedHealthData = eData.health;
+
+        Object.assign(entity, eData);
+        entity.listeners = {};
+
+        if (savedHealthData) {
+            entity.health = new Health(savedHealthData.max || 100);
+            Object.assign(entity.health, savedHealthData);
+            entity.health.listeners = {};
+        }
+
+        if (typeof entity.initEventListener === 'function') {
+            entity.initEventListener();
+        }
+
+        if (entity.sounds && entity.sounds.move) {
+            entity.moveSound = new Audio(entity.sounds.move);
+            entity.moveSound.loop = true;
+            entity.moveSound.volume = 1;
+        }
     }
 }

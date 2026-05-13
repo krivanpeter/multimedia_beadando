@@ -5,6 +5,7 @@ import { TILE_SIZE, BASE_HP } from './initSettings.js';
 export default class Base extends Entity {
     constructor(gridX, gridY, playerColor, playerId) {
         super(gridX, gridY, "BASE", playerId);
+        this.type = "BASE";
         this.playerColor = playerColor;
         this.health = new Health(BASE_HP);
         this.initEventListener();

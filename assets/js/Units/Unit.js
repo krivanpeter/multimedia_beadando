@@ -17,7 +17,8 @@ export default class Unit extends Entity {
         this.facing = (playerId === 1) ? "right" : "left";
         this.moveDirection = null;
 
-        this.moveSound = new Audio(sounds.move);
+        this.sounds = sounds;
+        this.moveSound = new Audio(this.sounds.move);
         this.moveSound.loop = true;
         this.moveSound.volume = 1;
 
@@ -139,19 +140,20 @@ export default class Unit extends Entity {
 
     clone(clone) {
         clone.cost = this.cost;
-        clone.target = this.target;
-        clone.state = this.state;
-        clone.clickable = this.clickable;
 
         clone.facing = this.facing;
         clone.moveDirection = this.moveDirection;
-
         clone.health = this.health.clone();
-        clone.initEventListener();
-
+        clone.sounds = this.sounds;
         clone.moveSound = this.moveSound;
         clone.moveSound.loop = this.moveSound.loop;
         clone.moveSound.volume = this.moveSound.volume;
+
+        clone.initEventListener();
+        clone.moveSound = new Audio(this.sounds.move);
+        clone.moveSound.loop = this.moveSound.loop;
+        clone.moveSound.volume = this.moveSound.volume;
+
         return super.clone(clone);
     }
 }

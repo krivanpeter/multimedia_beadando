@@ -6,6 +6,7 @@ export default class Tank extends Unit {
     constructor(gridX, gridY, playerId) {
         const assetKey = (playerId === 1) ? "TANK_BLUE" : "TANK_GREEN";
         super(gridX, gridY, assetKey, playerId, UNIT_DATA.TANK.HP, UNIT_DATA.TANK.COST, UNIT_DATA.TANK.SOUNDS);
+        this.type = "TANK";
         this.range = UNIT_DATA.TANK.RANGE;
         this.attackDamage = UNIT_DATA.TANK.DAMAGE;
         this.rockets = [];
