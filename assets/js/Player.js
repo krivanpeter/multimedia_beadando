@@ -5,7 +5,7 @@ import Unit from './Units/Unit.js';
 import WorkerUnit from './Units/WorkerUnit.js';
 import Truck from './Units/Truck.js';
 import Tank from './Units/Tank.js';
-import { ACTION_POINTS, WIN_COND_URANIUM, CHEAT_ON } from './initSettings.js';
+import { ACTION_POINTS, WIN_COND_URANIUM, CHEAT_ON, SHOOT_AP_COST } from './initSettings.js';
 
 export default class Player extends EventEmitter {
     constructor(name, id, color, baseX, baseY, isCloning = false) {
@@ -108,7 +108,7 @@ export default class Player extends EventEmitter {
                     Math.abs(target.gridY - this.selectedUnit.gridY);
                 if (dist <= this.selectedUnit.range) {
                     this.selectedUnit.shoot(target);
-                    this.updateAp(1);
+                    this.updateAp(SHOOT_AP_COST);
                 }
             }
         }

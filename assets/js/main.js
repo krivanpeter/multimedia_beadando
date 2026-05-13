@@ -1,7 +1,7 @@
 "use strict";
 
 import GameScene from './GameScene.js';
-import { GAME_SPEED, setGameSpeed, ROUND_TIME, setRoundTime, UNIT_DATA } from './initSettings.js';
+import { GAME_SPEED, setGameSpeed, ROUND_TIME, setRoundTime, UNIT_DATA, SHOOT_AP_COST } from './initSettings.js';
 
 let game;
 let lastTime = 0;
@@ -152,6 +152,9 @@ $("#tutorialBtn").on("click", function () {
         $("#tut-truck-rock").text(truckRes.rock);
         $("#tut-truck-iron").text(truckRes.iron);
         $("#tut-truck-uranium").text(truckRes.uranium);
+        const tankData = UNIT_DATA.TANK;
+        $("#shoot-range").text(tankData.RANGE);
+        $("#shoot-ap-cost").text(SHOOT_AP_COST);
     });
 
     $("#tutorialMenu").fadeIn(300);

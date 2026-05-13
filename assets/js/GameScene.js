@@ -8,7 +8,7 @@ import WorkerUnit from './Units/WorkerUnit.js';
 import Truck from './Units/Truck.js';
 import Tank from './Units/Tank.js';
 import Health from './Health.js';
-import { CHEAT_ON, WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES, UNIT_DATA } from './initSettings.js';
+import { CHEAT_ON, WORLD_MAP, TILE_SIZE, RES_W, RES_H, PLAYERS, ACTION_POINTS, RESOURCES, UNIT_DATA, SHOOT_AP_COST } from './initSettings.js';
 
 export default class GameScene extends EventEmitter {
     constructor(canvasId, spriteSheetSrc) {
@@ -175,7 +175,7 @@ export default class GameScene extends EventEmitter {
             const enemyUnit = this.players
                 .find(p => p.id !== this.currentPlayer.id)
                 .entities.find(e => e.gridX === gridPos.gridX && e.gridY === gridPos.gridY);
-            if (selected instanceof Tank && enemyUnit && (this.currentPlayer.ap > 0 || CHEAT_ON)) {
+            if (selected instanceof Tank && enemyUnit && (this.currentPlayer.ap >= SHOOT_AP_COST || CHEAT_ON)) {
                 const dist = Math.abs(gridPos.gridX - selected.gridX) + Math.abs(gridPos.gridY - selected.gridY);
                 if (dist <= selected.range) {
                     this.canShoot = true;
