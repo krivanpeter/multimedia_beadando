@@ -1,0 +1,102 @@
+<div class="tutorial-scroll">
+    <h2>Resources</h2>
+    <div class="tut-item">
+        <img src="assets/imgs/rock.png" alt="Rock">
+        <p><b>Rock:</b> Basic building material for Workers and Trucks.</p>
+    </div>
+    <div class="tut-item">
+        <img src="assets/imgs/iron.png" alt="Iron">
+        <p><b>Iron:</b> Basic building material for Tanks.</p>
+    </div>
+    <div class="tut-item">
+        <img src="assets/imgs/uranium.png" alt="Uranium">
+        <p><b>Uranium:</b> Collect 20 to win the game!</p>
+    </div>
+    <div class="tut-item">
+        <img src="assets/imgs/action_points.png" alt="Action Points">
+        <p><b>Action Points:</b> In each round you'll have 10.<br>
+            You can use it to move your units, attack enemies, or buy new units.</p>
+    </div>
+
+    <h2>Units</h2>
+    <div class="tut-item">
+        <img src="assets/imgs/blue_worker.png" alt="Worker">
+        <p><b>Worker:</b> Mines the following amount of resources.</p>
+        <ul>
+            <li>Rock: <span id="tut-worker-rock"></span></li>
+            <li>Iron: <span id="tut-worker-iron"></span></li>
+            <li>Uranium: <span id="tut-worker-uranium"></span></li>
+        </ul>
+    </div>
+    <div class="tut-item">
+        <img src="assets/imgs/blue_truck.png" alt="Truck">
+        <p><b>Truck:</b> Mines the following amount of resources.</p>
+        <ul>
+            <li>Rock: <span id="tut-truck-rock"></span></li>
+            <li>Iron: <span id="tut-truck-iron"></span></li>
+            <li>Uranium: <span id="tut-truck-uranium"></span></li>
+        </ul>
+    </div>
+    <div class="tut-item">
+        <img src="assets/imgs/blue_tank.png" alt="Tank">
+        <p><b>Tank:</b> Attacks enemy units.</p>
+    </div>
+
+    <h2>Buildings</h2>
+    <div class="tut-item">
+        <img src="assets/imgs/base.png" alt="Base">
+        <p><b>Base:</b> If destroyed, your enemy wins.</p>
+    </div>
+
+    <h2>User Interface</h2>
+    <div class="tut-item">
+        <img src="assets/imgs/ui_resources.png" alt="UI Resources">
+        <p>Here you can see all your collected resources.</p>
+    </div>
+    <div class="tut-item">
+        <img src="assets/imgs/ui_units.png" alt="UI Units">
+        <p>Here you can see all the units and there cost.<br>
+            If you've got enough resources, you can buy them and they'll spawn next to your base, if there's free
+            space.
+        </p>
+        <ul>
+            <li>Workers always spawn on the side of the base facing the center of the map.</li>
+            <li>Trucks always spawn on the top of the base.</li>
+            <li>Tanks always spawn on the bottom of the base.</li>
+        </ul>
+    </div>
+    <div class="tut-item">
+        <img src="assets/imgs/ui_center.png" alt="UI Center">
+        <p>Here you can see the current player, how many action points you have, and the remaining time of the
+            round.<br>
+            You can reset your turn, so you start from the beginning, but your timer won't reset.<br>
+            Also, you can end your turn here, or open the main menu.<br>
+    </div>
+
+    <h2>Actions</h2>
+    <h3>Movement</h3>
+    <div class="tut-item">
+        <img src="assets/imgs/ui_move.png" alt="Movement">
+        <p>When you select a unit, you can move it, if you've got enough action points.<br>
+            When you don't have enough action points, the number will be shown red, and the unit won't move.
+        </p>
+    </div>
+    <h3>Collectiong resources</h3>
+    <div class="tut-item">
+        <img src="assets/imgs/ui_move.png" alt="Collectiong resources">
+        <p>
+            If you move your Worker Unit, or your Truck to a resource node, it will collect and bring the given amount
+            of resource to your base.<br>
+            The given unit will move to your base, <b>without spending any action points</b>.
+        </p>
+    </div>
+    <h3>Attack/Shoot</h3>
+    <div class="tut-item">
+        <img src="assets/imgs/tank_shoot.png" alt="Attack/Shoot">
+        <p>If you've got a tank in range of an enemy, you can attack it.<br>
+            When the enemy unit's health reaches zero, it dies.<br>
+            When the enemy base's health reaches zero, you win.
+        </p>
+    </div>
+    <h3>Collectiong resources</h3>
+</div>

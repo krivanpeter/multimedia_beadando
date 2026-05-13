@@ -22,7 +22,7 @@
                 <button id="resetBtn" class="round-btn">RESET MY TURN</button>
 
                 <span class="ap-display">
-                    <span>Action Points:</span>
+                    <img src="assets/imgs/action_points.png" alt="Action Points"><br>
                     <span id="ap">10</span>
                 </span>
                 <button id="endTurnBtn" class="round-btn">END MY TURN</button>
@@ -98,7 +98,7 @@
             <div class="menu-content">
                 <button id="resumeBtn" class="menu-btn" style="display: none;">CONTINUE</button>
                 <button id="startGameBtn" class="menu-btn">NEW GAME</button>
-                <!-- <button id="tutorialBtn" class="menu-btn">HOW TO PLAY</button> -->
+                <button id="tutorialBtn" class="menu-btn">HOW TO PLAY</button>
                 <button id="settingsBtn" class="menu-btn">SETTINGS</button>
             </div>
             <div id="createdBy">
@@ -126,7 +126,15 @@
             </div>
         </div>
     </div>
-
+    <div id="tutorialMenu" class="overlay" style="display: none;">
+        <div class="menu-box tutorial-box">
+            <h1>HOW TO PLAY</h1>
+            <div id="tutorialContent" class="menu-content">
+                <p>Loading...</p>
+            </div>
+            <button id="backFromTutorialBtn" class="submenu-btn">BACK</button>
+        </div>
+    </div>
 </body>
 <script type="module" src="assets/js/jquery.min.js"></script>
 <script type="module" src="assets/js/main.js"></script>

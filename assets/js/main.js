@@ -1,7 +1,7 @@
 "use strict";
 
 import GameScene from './GameScene.js';
-import { GAME_SPEED, setGameSpeed, ROUND_TIME, setRoundTime } from './initSettings.js';
+import { GAME_SPEED, setGameSpeed, ROUND_TIME, setRoundTime, UNIT_DATA } from './initSettings.js';
 
 let game;
 let lastTime = 0;
@@ -68,13 +68,13 @@ $("#startGameBtn, #newGameBtn").on("click", function () {
     });
 });
 
-$("#menuBtn").on("click", () => {
+$("#menuBtn").on("click", function () {
     isPaused = true;
     $("#menuTitle").text("PAUSE");
     $("#mainMenu").fadeIn(300);
 });
 
-$("#resumeBtn").on("click", () => {
+$("#resumeBtn").on("click", function () {
     $("#mainMenu").fadeOut(300);
 
     isPaused = false;
@@ -82,20 +82,20 @@ $("#resumeBtn").on("click", () => {
     requestAnimationFrame(loop);
 });
 
-$("#settingsBtn").on("click", () => {
+$("#settingsBtn").on("click", function () {
     $("#mainMenu").hide();
     setSettingValues();
     $("#settingsMenu").fadeIn(300);
 });
 
-$("#backFromSettingsBtn").on("click", () => {
+$("#backFromSettingsBtn").on("click", function () {
     $("#settingsMenu").fadeOut(300, () => {
         setSettingTexts();
         $("#mainMenu").show();
     });
 });
 
-$("#saveSettingsBtn").on("click", () => {
+$("#saveSettingsBtn").on("click", function () {
     $("#settingsMenu").fadeOut(300, () => {
         setSettingValues();
         $("#mainMenu").show();
@@ -123,3 +123,29 @@ function setSettingValues() {
     settings.ROUND_TIME = $("#roundTimerSlider").val();
     setRoundTime(settings.ROUND_TIME);
 }
+
+$("#tutorialBtn").on("click", function () {
+    $("#mainMenu").hide();
+
+    $("#tutorialContent").load("tutorial.html", function (response, status, xhr) {
+        if (status == "error") {
+            $("#tutorialContent").html("<p>Error loading tutorial: " + xhr.statusText + "</p>");
+        }
+        const workerRes = UNIT_DATA.WORKER.MINING_AMOUNT;
+        $("#tut-worker-rock").text(workerRes.rock);
+        $("#tut-worker-iron").text(workerRes.iron);
+        $("#tut-worker-uranium").text(workerRes.uranium);
+        const truckRes = UNIT_DATA.TRUCK.MINING_AMOUNT;
+        $("#tut-truck-rock").text(truckRes.rock);
+        $("#tut-truck-iron").text(truckRes.iron);
+        $("#tut-truck-uranium").text(truckRes.uranium);
+    });
+
+    $("#tutorialMenu").fadeIn(300);
+});
+
+$("#backFromTutorialBtn").on("click", function () {
+    $("#tutorialMenu").fadeOut(300, () => {
+        $("#mainMenu").show();
+    });
+});

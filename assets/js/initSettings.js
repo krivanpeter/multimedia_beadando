@@ -22,7 +22,7 @@ export const HEALTH = {
 export const ACTION_POINTS = 10;
 
 export const BASE_HP = 100;
-export const ROCKET_SPEED = 50;
+export const ROCKET_SPEED = 10;
 
 export const UNIT_DATA = {
     WORKER: {
