@@ -2,7 +2,7 @@ import Entity from '../Entity.js';
 import Health from '../Health.js';
 import {
     TILE_SIZE,
-    GAME_SPEED
+    MOVE_SPEED
 } from '../initSettings.js';
 
 export default class Unit extends Entity {
@@ -70,7 +70,7 @@ export default class Unit extends Entity {
     }
 
     moveTowardsTarget(dt) {
-        const moveStep = GAME_SPEED * dt * 100;
+        const moveStep = MOVE_SPEED * dt * 100;
         const dx = this.targetXpx - this.x;
         const dy = this.targetYpx - this.y;
 

@@ -1,9 +1,11 @@
 "use strict";
 
+export let MOVE_SPEED = 5;
+export let GAME_SPEED = 1 * MOVE_SPEED;
+export let ROUND_TIME = 60;
+
 export const CHEAT_ON = false;
 
-export const ROUND_TIME = 60;
-export const GAME_SPEED = 20;
 export const WIN_COND_URANIUM = 20;
 
 export const RES_W = 1600;
@@ -20,7 +22,7 @@ export const HEALTH = {
 export const ACTION_POINTS = 10;
 
 export const BASE_HP = 100;
-export const ROCKET_SPEED = 15;
+export const ROCKET_SPEED = 50;
 
 export const UNIT_DATA = {
     WORKER: {
@@ -126,3 +128,11 @@ $("#canvas").attr({
     "width": RES_W,
     "height": RES_H
 });
+
+export function setGameSpeed(val) {
+    MOVE_SPEED = parseFloat(val) * GAME_SPEED;
+}
+
+export function setRoundTime(val) {
+    ROUND_TIME = parseInt(val);
+}

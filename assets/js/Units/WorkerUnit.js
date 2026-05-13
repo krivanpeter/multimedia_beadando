@@ -1,5 +1,5 @@
 import Unit from './Unit.js';
-import { GAME_SPEED, UNIT_DATA } from '../initSettings.js';
+import { MOVE_SPEED, UNIT_DATA } from '../initSettings.js';
 
 export default class WorkerUnit extends Unit {
     constructor(gridX, gridY, playerId, base, type = "WORKER") {
@@ -46,7 +46,7 @@ export default class WorkerUnit extends Unit {
             super.moveTowardsTarget(dt);
             return;
         }
-        const moveStep = GAME_SPEED * dt * 100;
+        const moveStep = MOVE_SPEED * dt * 100;
         const dx = this.targetXpx - this.x;
         const dy = this.targetYpx - this.y;
 

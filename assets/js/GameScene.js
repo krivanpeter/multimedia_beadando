@@ -110,6 +110,8 @@ export default class GameScene extends EventEmitter {
         this.hoveredGrid = null;
 
         this.currentPlayer = (this.currentPlayer.id == 1) ? this.players[1] : this.players[0];
+        
+        this.emit("turnEnded")
 
         this.saveState();
         this.updateRoundUI();
