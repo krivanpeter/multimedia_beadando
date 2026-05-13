@@ -64,6 +64,8 @@ export default class GameScene extends EventEmitter {
         $('[data-type="worker"] .cost').text(`${UNIT_DATA.WORKER.COST.unit} ${UNIT_DATA.WORKER.COST.type}`);
         $('[data-type="truck"] .cost').text(`${UNIT_DATA.TRUCK.COST.unit} ${UNIT_DATA.TRUCK.COST.type}`);
         $('[data-type="tank"] .cost').text(`${UNIT_DATA.TANK.COST.unit} ${UNIT_DATA.TANK.COST.type}`);
+        this.updateApUI();
+        this.updateAllResUI();
         this.updateBuildMenu();
     }
 
@@ -110,7 +112,7 @@ export default class GameScene extends EventEmitter {
         this.hoveredGrid = null;
 
         this.currentPlayer = (this.currentPlayer.id == 1) ? this.players[1] : this.players[0];
-        
+
         this.emit("turnEnded")
 
         this.saveState();
@@ -359,6 +361,16 @@ export default class GameScene extends EventEmitter {
         for (let i = 0; i < entries.length; i++) {
             $("#" + entries[i][0] + this.currentPlayer.id).text(entries[i][1]);
         }
+    }
+
+    updateAllResUI() {
+        this.players.forEach(player => {
+            const res = player.resources;
+            const entries = Object.entries(res);
+            for (let i = 0; i < entries.length; i++) {
+                $("#" + entries[i][0] + player.id).text(entries[i][1]);
+            }
+        });
     }
 
     updateRoundUI() {

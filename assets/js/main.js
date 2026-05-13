@@ -53,11 +53,12 @@ function setRemainingTime(dt) {
 }
 
 $("#startGameBtn, #newGameBtn").on("click", function () {
-    $(this).hide();
     $("#gameOverMenu").hide();
     $("#mainMenu").hide();
     $("#resumeBtn").show();
 
+    timerValue = settings.ROUND_TIME;
+    $("#remainingTime").text(timerValue);
     initGame();
 
     isPaused = false;
