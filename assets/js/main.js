@@ -83,6 +83,17 @@ $("#resumeBtn").on("click", function () {
     requestAnimationFrame(loop);
 });
 
+$(window).on("keydown", function (e) {
+    if (e.key.toLowerCase() === "p") {
+        if (!isPaused) {
+            $("#menuBtn").trigger("click");
+        }
+        else if ($("#mainMenu").is(":visible") && $("#resumeBtn").is(":visible")) {
+            $("#resumeBtn").trigger("click");
+        }
+    }
+});
+
 $("#settingsBtn").on("click", function () {
     $("#mainMenu").hide();
     setSettingValues();
