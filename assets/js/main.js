@@ -11,6 +11,9 @@ let timerValue = ROUND_TIME;
 let settings = { GAME_SPEED: GAME_SPEED, ROUND_TIME: ROUND_TIME };
 
 function initGame() {
+    if(game){
+        game.stopAllSounds();
+    }
     game = new GameScene("canvas", "assets/imgs/scifi_tilesheet.png");
 
     game.on("turnEnded", () => {
@@ -19,6 +22,7 @@ function initGame() {
 
     game.on("gameOver", (winner) => {
         isPaused = true;
+        game.stopAllSounds();
 
         $("#winnerText").text(`The winner is: ${winner.name}`);
         $("#gameOverMenu").fadeIn(300);
@@ -70,6 +74,7 @@ $("#startGameBtn, #newGameBtn").on("click", function () {
 
 $("#menuBtn").on("click", function () {
     isPaused = true;
+    game.stopAllSounds();
     $("#saveGameBtn").show();
 
     $("#menuTitle").text("PAUSE");

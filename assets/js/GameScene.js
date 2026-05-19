@@ -476,4 +476,13 @@ export default class GameScene extends EventEmitter {
             entity.moveSound.volume = 1;
         }
     }
+
+    stopAllSounds() {
+        const allEntities = this.players.flatMap(p => p.entities);
+        allEntities.forEach(entity => {
+            if (entity.stopMoveSound) {
+                entity.stopMoveSound();
+            }
+        });
+    }
 }
