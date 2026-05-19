@@ -57,16 +57,10 @@ export const PLAYERS = [
 
 export const RESOURCES = [
     { x: 6, y: 8, type: "rock" },
-    { x: 7, y: 5, type: "rock" },
-    { x: 5, y: 3, type: "rock" },
-    { x: 9, y: 9, type: "iron" },
-    { x: 4, y: 10, type: "iron" },
+    { x: 7, y: 3, type: "iron" },
     { x: 12, y: 6, type: "uranium" },
-    { x: 18, y: 8, type: "rock" },
-    { x: 17, y: 5, type: "rock" },
     { x: 19, y: 3, type: "rock" },
-    { x: 15, y: 9, type: "iron" },
-    { x: 20, y: 10, type: "iron" },
+    { x: 18, y: 10, type: "iron" },
 ];
 
 export const ASSETS_MAP = {
@@ -105,17 +99,17 @@ export const shortHands = {
 
 export const mapBlueprint = [
     "TTTTTTTTTTTTTTTTTTTTTTTTT",
-    "T.......................T",
-    "T.......................T",
-    "T.......................T",
-    "T.......................T",
-    "T.......................T",
-    "T.......................T",
-    "T.......................T",
-    "T.......................T",
-    "T.......................T",
-    "T.......................T",
-    "T.......................T",
+    "T...........|......T....T",
+    "T....TT.....|...........T",
+    "T...........|..TT.......T",
+    "T......T....|...........T",
+    "T...........|...........T",
+    "T-----------+-----------T",
+    "T........T..|.......T...T",
+    "T.......T...|...........T",
+    "T..T........|....TT...T.T",
+    "T....TT.....|......T....T",
+    "T...T.......|...........T",
     "TTTTTTTTTTTTTTTTTTTTTTTTT"
 ];
 
