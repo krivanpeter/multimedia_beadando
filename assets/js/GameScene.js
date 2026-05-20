@@ -98,11 +98,11 @@ export default class GameScene extends EventEmitter {
     }
 
     setupInputs() {
-        $("#canvas").on("mousedown", (e) => this.handleMouseDown(e));
-        $("#canvas").on("mousemove", (e) => this.handleMouseMove(e));
-        $("#endTurnBtn").on("click", () => this.endTurn());
-        $("#resetBtn").on("click", () => this.loadState());
-        $('.build-items div').on("click", (e) => this.handleBuilding($(e.currentTarget)));
+        $("#canvas").off("mousedown").on("mousedown", (e) => this.handleMouseDown(e));
+        $("#canvas").off("mousemove").on("mousemove", (e) => this.handleMouseMove(e));
+        $("#endTurnBtn").off("click").on("click", () => this.endTurn());
+        $("#resetBtn").off("click").on("click", () => this.loadState());
+        $('.build-items div').off("click").on("click", (e) => this.handleBuilding($(e.currentTarget)));
     }
 
     endTurn() {
@@ -115,7 +115,7 @@ export default class GameScene extends EventEmitter {
         this.pathDistance = 0;
         this.hoveredGrid = null;
 
-        this.currentPlayer = (this.currentPlayer.id == 1) ? this.players[1] : this.players[0];
+        this.currentPlayer = this.players.find(p => p.id !== this.currentPlayer.id);
 
         this.emit("turnEnded")
 
@@ -410,14 +410,19 @@ export default class GameScene extends EventEmitter {
 
         this.currentPlayer = this.players.find(p => p.id === data.currentPlayerId);
         this.initEmitListeners();
+        this.updateAllResUI();
         this.updateRoundUI();
-        this.players.forEach(p => this.updateResUI(p));
     }
 
     restorePlayer(pData) {
         const player = new Player(pData.name, pData.id, pData.color, 0, 0, true);
-        Object.assign(player, pData);
-        player.listeners = {};
+        const freshListeners = player.listeners;
+
+        const dataToAssign = { ...pData };
+        delete dataToAssign.listeners;
+
+        Object.assign(player, dataToAssign);
+        player.listeners = freshListeners || {};
 
         player.entities = pData.entities.map(eData => {
             const entity = this.createEntity(eData, player);
@@ -456,14 +461,22 @@ export default class GameScene extends EventEmitter {
 
     rehydrateEntity(entity, eData) {
         const savedHealthData = eData.health;
+        const freshListeners = entity.listeners;
+        const dataToAssign = { ...eData };
+        delete dataToAssign.listeners;
 
-        Object.assign(entity, eData);
-        entity.listeners = {};
+        Object.assign(entity, dataToAssign);
+        entity.listeners = freshListeners || {};
 
         if (savedHealthData) {
             entity.health = new Health(savedHealthData.max || 100);
-            Object.assign(entity.health, savedHealthData);
-            entity.health.listeners = {};
+            const freshHealthListeners = entity.health.listeners;
+
+            const healthDataToAssign = { ...savedHealthData };
+            delete healthDataToAssign.listeners;
+
+            Object.assign(entity.health, healthDataToAssign);
+            entity.health.listeners = freshHealthListeners || {};
         }
 
         if (typeof entity.initEventListener === 'function') {

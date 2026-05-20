@@ -74,7 +74,7 @@ export default class WorkerUnit extends Unit {
         this.state = "toStart";
     }
 
-    clone() {
+    clone(existingClone = null) {
         let clone = new WorkerUnit(this.startX, this.startY, this.playerId, this.base);
         clone.type = this.type;
         clone.startX = this.startX;
